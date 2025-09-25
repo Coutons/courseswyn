@@ -1,4 +1,4 @@
-# coursespeak (real.discount clone)
+# coursespeak
 
 This is a fresh Next.js app to build a real.discount-like deals aggregator for online courses.
 
