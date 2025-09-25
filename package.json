@@ -1,0 +1,29 @@
+{
+  "name": "coursespeak",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Clone of real.discount built with Next.js",
+  "scripts": {
+    "dev": "next dev -p 3002",
+    "build": "next build",
+    "start": "next start -p 3002",
+    "lint": "next lint",
+    "import:wp": "ts-node scripts/import-wordpress.ts --base=%WP_BASE%"
+  },
+  "dependencies": {
+    "next": "14.2.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.24",
+    "@types/react": "18.2.55",
+    "@types/react-dom": "18.2.19",
+    "@types/turndown": "^5.0.5",
+    "eslint": "8.57.0",
+    "eslint-config-next": "14.2.5",
+    "ts-node": "^10.9.2",
+    "turndown": "^7.2.1",
+    "typescript": "5.4.5"
+  }
+}
