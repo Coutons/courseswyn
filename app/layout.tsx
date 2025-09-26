@@ -111,7 +111,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </svg>
               </a>
             </h1>
-            <style jsx>{`
+            <style>{`
               .nav-link {
                 color: #eaf4ff;
                 text-decoration: none;
