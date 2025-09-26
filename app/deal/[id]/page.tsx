@@ -5,6 +5,7 @@ import { readDeals } from "@/lib/store";
 import { renderMarkdownToHtml } from "@/lib/markdown";
 import ActionsPanel from "@/components/ActionsPanel";
 import RelatedList from "@/components/RelatedList";
+import { buildDealLink } from "@/lib/links";
 
 async function getDeal(id: string): Promise<Deal> {
   const host = headers().get("host");
@@ -339,7 +340,7 @@ export default async function DealDetail({ params }: { params: { id: string } })
                 ) : null}
               </div>
               {d.coupon && <div className="pill">Coupon: {d.coupon}</div>}
-              <a className="btn" href={d.url} target="_blank" rel="noreferrer">Enroll now</a>
+              <a className="btn" href={buildDealLink(d as any)} target="_blank" rel="noreferrer">Enroll now</a>
               <ActionsPanel deal={{ id: d.id, title: d.title, url: d.url }} />
               <div className="muted" style={{ fontSize: 12 }}>
                 ⭐ {displayRating.toFixed(1)} • 👥 {displayStudents.toLocaleString()}

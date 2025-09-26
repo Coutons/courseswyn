@@ -4,6 +4,7 @@ export default function Head() {
       <title>Coursespeak Deals</title>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="description" content="Find the best course deals and coupons" />
+      <meta name="impact-site-verification" content="8d126977-e5fb-405f-8ca4-712839b13cfa" />
     </>
   );
 }

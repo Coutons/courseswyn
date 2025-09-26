@@ -1,6 +1,27 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname, './'),
+      '@/components': path.resolve(__dirname, './components'),
+      '@/lib': path.resolve(__dirname, './lib'),
+      '@/types': path.resolve(__dirname, './types'),
+    };
+    return config;
+  },
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'img-c.udemycdn.com' },
+      { protocol: 'https', hostname: 'udemy-images.udemy.com' },
+      { protocol: 'https', hostname: 'udemycdn.com' },
+      { protocol: 'https', hostname: 'picsum.photos' },
+      { protocol: 'https', hostname: 'i.imgur.com' },
+    ],
+  },
   async redirects() {
     return [
       // WordPress categories -> Next.js category filter

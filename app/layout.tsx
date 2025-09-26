@@ -5,7 +5,7 @@ import Script from "next/script";
 export const metadata = {
   title: "Coursespeak Deals",
   description: "Find the best course deals and coupons",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3002"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://coursespeak.com"),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -20,6 +20,40 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
+        {/* Impact STAT Tag */}
+        <Script 
+          id="impact-stat-tag" 
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(a,b,c,d,e,f,g){
+                e['ire_o'] = c;
+                e[c] = e[c] || function(){
+                  (e[c].a = e[c].a||[]).push(arguments)
+                };
+                f = d.createElement(b);
+                g = d.getElementsByTagName(b)[0];
+                f.async = 1;
+                f.src = a;
+                g.parentNode.insertBefore(f,g);
+              })('//d.impactradius-event.com/A6564357-35a5-419d-9b2e-28c3c7b15ac311.js','script','impactStat',document,window);
+              
+              // Initialize Impact tracking
+              if (typeof impactStat === 'function') {
+                try {
+                  // Transform links and track impressions
+                  impactStat('transformLinks');
+                  impactStat('trackImpression');
+                  console.log('Impact STAT tag initialized successfully');
+                } catch (e) {
+                  console.error('Error initializing Impact STAT tag:', e);
+                }
+              } else {
+                console.error('impactStat function not found');
+              }
+            `
+          }}
+        />
         {/* Organization & WebSite JSON-LD for SEO */}
         <script
           type="application/ld+json"
@@ -28,8 +62,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "Coursespeak",
-              url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3002"}`,
-              logo: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3002"}/logo.svg`,
+              url: typeof window !== 'undefined' ? window.location.origin : 'https://coursespeak.com',
+              logo: typeof window !== 'undefined' ? `${window.location.origin}/logo.svg` : 'https://coursespeak.com/logo.svg',
             }),
           }}
         />
@@ -40,10 +74,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "Coursespeak",
-              url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3002"}`,
+              url: typeof window !== 'undefined' ? window.location.origin : 'https://coursespeak.com',
               potentialAction: {
                 "@type": "SearchAction",
-                target: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3002"}/search?q={search_term_string}`,
+                target: typeof window !== 'undefined' 
+                  ? `${window.location.origin}/search?q={search_term_string}`
+                  : 'https://coursespeak.com/search?q={search_term_string}',
                 "query-input": "required name=search_term_string",
               },
             }),
@@ -75,11 +111,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </svg>
               </a>
             </h1>
-            <nav>
-              <a href="/">Home</a>
-              <a href="/categories">Categories</a>
-              <a href="/search">Search</a>
-              <a href="/saved">Saved</a>
+            <style jsx>{`
+              .nav-link {
+                color: #eaf4ff;
+                text-decoration: none;
+                padding: 0.5rem 0;
+                border-bottom: 2px solid transparent;
+                transition: border-color 0.2s;
+              }
+              .nav-link:hover {
+                border-bottom: 2px solid #3b82f6;
+              }
+            `}</style>
+            <nav style={{
+              display: 'flex',
+              gap: '1.5rem',
+              alignItems: 'center'
+            }}>
+              <a href="/" className="nav-link">Home</a>
+              <a href="/categories" className="nav-link">Categories</a>
+              <a href="/search" className="nav-link">Search</a>
+              <a href="/contact" className="nav-link">Contact</a>
             </nav>
           </div>
         </header>

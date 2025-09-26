@@ -4,6 +4,8 @@ import { uniqueProviders } from "@/lib/mockData";
 import type { Metadata } from "next";
 import DealsList from "@/components/DealsList";
 import { readDeals } from "@/lib/store";
+import { slugifyCategory } from "@/lib/slug";
+import { buildDealLink } from "@/lib/links";
 import { promises as fs } from "fs";
 import path from "path";
 
@@ -20,35 +22,94 @@ export const metadata: Metadata = {
   },
 };
 
-async function getDeals(params: { q?: string; category?: string; page?: string; provider?: string; sort?: string; freeOnly?: string }) {
-  // Use current request host to support any dev/prod port and domain
-  const host = headers().get("host");
-  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
-  const query = new URLSearchParams();
-  if (params.q) query.set("q", params.q);
-  if (params.category) query.set("category", params.category);
-  if (params.provider) query.set("provider", params.provider);
-  if (params.sort) query.set("sort", params.sort);
-  if (params.freeOnly) query.set("freeOnly", params.freeOnly);
-  query.set("page", String(Number(params.page ?? 1)));
-  query.set("pageSize", "12");
-  try {
-    const res = await fetch(`${protocol}://${host}/api/deals?${query.toString()}`, { cache: "no-store" });
-    if (!res.ok) {
-      // Avoid crashing the page on non-JSON error bodies
-      return { items: [], total: 0, page: 1, totalPages: 1 };
-    }
-    return await res.json();
-  } catch {
-    // Network/parse errors -> return empty state to keep page rendering
-    return { items: [], total: 0, page: 1, totalPages: 1 };
+// Ensure the homepage is always rendered dynamically and never cached with an empty state
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+function filterList(all: any[], opts: { q?: string; category?: string; provider?: string; freeOnly?: string }) {
+  const term = opts.q?.trim().toLowerCase();
+  const cat = opts.category?.trim().toLowerCase();
+  const prov = opts.provider?.trim().toLowerCase();
+  return all.filter((d) => {
+    const okTerm = !term
+      ? true
+      : String(d.title || "").toLowerCase().includes(term) ||
+        String(d.provider || "").toLowerCase().includes(term) ||
+        String(d.category || "").toLowerCase().includes(term);
+    // If a category slug is provided, compare against slugified category from the data
+    const okCat = !cat ? true : slugifyCategory(String(d.category || "")) === cat;
+    const okProv = !prov ? true : String(d.provider || "").toLowerCase() === prov;
+    const okFree = opts.freeOnly ? (d.price ?? 0) === 0 : true;
+    return okTerm && okCat && okProv && okFree;
+  });
+}
+
+function sortList(items: any[], sort?: string): any[] {
+  switch (sort) {
+    case "updated":
+      return [...items].sort((a, b) => new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime());
+    case "rating":
+      return [...items].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+    case "students":
+      return [...items].sort((a, b) => (b.students ?? 0) - (a.students ?? 0));
+    case "price":
+      return [...items].sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+    case "newest":
+    default:
+      return [...items].sort((a, b) => new Date(b.expiresAt ?? 0).getTime() - new Date(a.expiresAt ?? 0).getTime());
   }
+}
+
+async function getDeals(params: { q?: string; category?: string; page?: string; provider?: string; sort?: string; freeOnly?: string }) {
+  // Compute server-side from local data for initial render to avoid API variability
+  const all = await readDeals();
+  const filtered = sortList(
+    filterList(all, {
+      q: params.q,
+      category: params.category,
+      provider: params.provider,
+      freeOnly: params.freeOnly,
+    }),
+    params.sort
+  );
+  const pageNum = Math.max(1, Number(params.page ?? 1));
+  const pageSize = 12;
+  const start = (pageNum - 1) * pageSize;
+  const items = filtered.slice(start, start + pageSize);
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  return { items, total, page: pageNum, totalPages };
 }
 
 export default async function Page({ searchParams }: { searchParams: { q?: string; category?: string; page?: string; provider?: string; sort?: string; freeOnly?: string } }) {
   const providers = uniqueProviders();
-  const pageData = await getDeals(searchParams);
+  let pageData = await getDeals(searchParams);
+  // Guard: if for any reason we computed an empty list, fall back to unfiltered first page
+  if (!pageData.items || pageData.items.length === 0) {
+    const all = await readDeals();
+    const fallback = all.slice(0, 12);
+    pageData = { items: fallback, total: all.length, page: 1, totalPages: Math.max(1, Math.ceil(all.length / 12)) } as any;
+  }
   const { items, total, page, totalPages } = pageData;
+  // Reduce payload passed to the client component to avoid large serialization (App Router limit ~1MB)
+  const lightItems = (items || []).map((d: any) => ({
+    id: d.id,
+    slug: d.slug,
+    title: d.title,
+    provider: d.provider,
+    url: d.url,
+    finalUrl: buildDealLink(d),
+    price: d.price,
+    originalPrice: d.originalPrice,
+    rating: d.rating,
+    students: d.students,
+    image: d.image,
+    category: d.category,
+    subcategory: d.subcategory,
+    expiresAt: d.expiresAt,
+    coupon: d.coupon,
+    updatedAt: d.updatedAt,
+  }));
   // Build dynamic primary categories from all deals, merging equivalent names
   // e.g., "IT & Software" vs "IT &amp; Software"
   const all = await readDeals();
@@ -130,6 +191,10 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
 
   return (
     <div>
+      {/* TEMP DEBUG: remove after verifying production */}
+      <div style={{ padding: 8, border: "1px dashed #334155", borderRadius: 8, marginBottom: 8, background: "#0f1320", color: "#9fb0c8", fontSize: 12 }}>
+        Debug: total deals {total}, showing {lightItems.length} on page {page}/{totalPages}. First titles: {lightItems.slice(0, 2).map((x: any) => x.title).join(" | ")}
+      </div>
       <section
         style={{
           padding: 16,
@@ -259,7 +324,7 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
       </div>
 
       <DealsList
-        initialItems={items}
+        initialItems={lightItems}
         initialPage={page}
         totalPages={totalPages}
         baseParams={{
