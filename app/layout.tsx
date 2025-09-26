@@ -118,9 +118,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 padding: 0.5rem 0;
                 border-bottom: 2px solid transparent;
                 transition: border-color 0.2s;
+                border-radius: 6px;
+                display: block;
               }
               .nav-link:hover {
                 border-bottom: 2px solid #3b82f6;
+                background: #151a28;
+                color: #ffffff;
               }
             `}</style>
             <nav style={{
