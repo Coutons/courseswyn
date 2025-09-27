@@ -9,6 +9,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function LegacyPostRedirect({ params }: Props) {
+export default function LegacyRootRedirect({ params }: Props) {
   permanentRedirect(`/deal/${params.slug}`);
 }
