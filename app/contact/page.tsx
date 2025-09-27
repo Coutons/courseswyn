@@ -1,31 +1,143 @@
-import { Metadata } from 'next';
+import type { Metadata } from "next";
+import React from "react";
 
 export const metadata: Metadata = {
-  title: 'Contact Us - Coursespeak',
-  description: 'Get in touch with the Coursespeak team for any questions or feedback.',
+  title: "Contact | Coursespeak",
+  description: "Send us a message with your questions, feedback, or partnership requests.",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "Contact | Coursespeak",
+    description: "Get in touch with the Coursespeak team.",
+    url: "/contact",
+    type: "website",
+  },
 };
+
+type InputProps = {
+  label: string;
+  name: string;
+  type?: string;
+  required?: boolean;
+  placeholder?: string;
+};
+
+function Field({ label, name, type = "text", required = false, placeholder }: InputProps) {
+  return (
+    <label style={{ display: "grid", gap: 6 }}>
+      <span>{label}</span>
+      <input
+        name={name}
+        type={type}
+        placeholder={placeholder}
+        required={required}
+        style={{
+          padding: "10px 12px",
+          borderRadius: 10,
+          border: "1px solid #273044",
+          background: "#101727",
+          color: "#eaf4ff",
+        }}
+      />
+    </label>
+  );
+}
+
+function TextArea({ label, name, required = false, placeholder }: Omit<InputProps, "type">) {
+  return (
+    <label style={{ display: "grid", gap: 6 }}>
+      <span>{label}</span>
+      <textarea
+        name={name}
+        rows={6}
+        required={required}
+        placeholder={placeholder}
+        style={{
+          padding: "10px 12px",
+          borderRadius: 10,
+          border: "1px solid #273044",
+          background: "#101727",
+          color: "#eaf4ff",
+          resize: "vertical",
+          minHeight: 140,
+        }}
+      />
+    </label>
+  );
+}
 
 export default function ContactPage() {
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem 1rem' }}>
-      <h1 style={{ color: '#eaf4ff' }}>Contact Us</h1>
-      <div style={{ 
-        background: '#151a28', 
-        borderRadius: '8px', 
-        padding: '2rem',
-        border: '1px solid #1f2330'
-      }}>
-        <p style={{ color: '#a9b0c0' }}>
-          Have questions or feedback? We'd love to hear from you! Please reach out to us using the information below.
+    <section
+      style={{
+        maxWidth: 720,
+        margin: "0 auto",
+        padding: "32px 20px 56px",
+        display: "grid",
+        gap: 24,
+      }}
+    >
+      <header style={{ display: "grid", gap: 12 }}>
+        <h1 style={{ margin: 0 }}>Contact Coursespeak</h1>
+        <p className="muted" style={{ margin: 0 }}>
+          Have questions, feedback, or partnership opportunities? Fill out the form below and we’ll get back to you within 1–2 business days.
         </p>
-        
-        <div style={{ margin: '2rem 0' }}>
-          <h3 style={{ color: '#eaf4ff', marginTop: '2rem' }}>Email</h3>
-          <p>
-            <a href="mailto:contact@coursespeak.com" style={{ color: '#3b82f6' }}>contact@coursespeak.com</a>
-          </p>
+      </header>
+
+      <form
+        action="https://formsubmit.co/contact@coursespeak.com"
+        method="POST"
+        style={{
+          display: "grid",
+          gap: 20,
+          padding: 24,
+          borderRadius: 16,
+          border: "1px solid #1f2330",
+          background: "linear-gradient(145deg, #0f1320, #151b2c)",
+          boxShadow: "0 16px 40px rgba(8, 13, 26, 0.35)",
+        }}
+      >
+        <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+          <Field label="Name" name="name" required placeholder="Jane Doe" />
+          <Field label="Email" name="email" type="email" required placeholder="you@company.com" />
+          <Field label="Company" name="company" placeholder="Company or organization" />
+          <Field label="Topic" name="topic" placeholder="e.g. Sponsorship, Support" />
         </div>
-      </div>
-    </div>
+
+        <TextArea label="How can we help?" name="message" required placeholder="Share as many details as possible" />
+
+        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+          <button type="submit" className="btn" style={{ padding: "10px 18px" }}>
+            Send message
+          </button>
+          <span className="muted" style={{ fontSize: 12 }}>
+            We respect your privacy. No spam, ever.
+          </span>
+        </div>
+
+        <input type="hidden" name="_next" value="https://coursespeak.com/contact?submitted=1" />
+        <input type="hidden" name="_captcha" value="false" />
+      </form>
+
+      <aside style={{ display: "grid", gap: 12 }}>
+        <h2 style={{ margin: 0, fontSize: 20 }}>Prefer direct contact?</h2>
+        <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 8 }}>
+          <li>
+            <a href="mailto:contact@coursespeak.com" style={{ color: "#3b82f6" }}>
+              contact@coursespeak.com
+            </a>
+          </li>
+          <li>
+            <a href="https://x.com/coursespeak" target="_blank" rel="noreferrer" style={{ color: "#3b82f6" }}>
+              Twitter / X
+            </a>
+          </li>
+          <li>
+            <a href="https://discord.gg/coursespeak" target="_blank" rel="noreferrer" style={{ color: "#3b82f6" }}>
+              Join our Discord community
+            </a>
+          </li>
+        </ul>
+      </aside>
+    </section>
   );
 }
