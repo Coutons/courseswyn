@@ -40,18 +40,33 @@ async function main() {
     updatedAt: d.updatedAt || new Date().toISOString(),
   }));
 
-  console.log(`Importing ${prepared.length} deals to Supabase...`);
-  const batches = chunk(prepared, 500);
+  const batchSize = Number(process.env.IMPORT_BATCH_SIZE ?? 10);
+  console.log(`Importing ${prepared.length} deals to Supabase using batch size ${batchSize}...`);
+  const queue = chunk(prepared, Math.max(1, batchSize));
+  let processed = 0;
+  let attempts = 0;
 
-  for (const [index, batch] of batches.entries()) {
-    const { error } = await client
-      .from("deals")
-      .upsert(batch, { onConflict: "id" });
+  while (queue.length > 0) {
+    const batch = queue.shift()!;
+    attempts += 1;
+    const { error } = await client.from("deals").upsert(batch, { onConflict: "id" });
     if (error) {
-      console.error("Failed to upsert batch", index + 1, error.message, error.details ?? "");
+      const message = `${error.message ?? ""} ${error.details ?? ""}`.trim();
+      const is413 = message.includes("413") || message.toLowerCase().includes("entity too large");
+      if (is413 && batch.length > 1) {
+        const mid = Math.ceil(batch.length / 2);
+        console.warn(`Batch of ${batch.length} too large (attempt ${attempts}). Splitting into ${mid} + ${batch.length - mid}.`);
+        queue.unshift(batch.slice(mid));
+        queue.unshift(batch.slice(0, mid));
+        continue;
+      }
+
+      console.error("Failed to upsert batch", attempts, message);
       process.exit(1);
     }
-    console.log(`Batch ${index + 1}/${batches.length} imported (${batch.length} records).`);
+
+    processed += batch.length;
+    console.log(`Imported ${processed}/${prepared.length} deals (batch size ${batch.length}).`);
   }
 
   console.log("Import completed successfully.");
