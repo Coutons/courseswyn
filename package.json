@@ -4,15 +4,15 @@
   "private": true,
   "description": "Clone of real.discount built with Next.js",
   "scripts": {
-    "dev": "next dev -p 3002",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 3002",
+    "start": "next start",
     "lint": "next lint",
-    "import:wp": "ts-node scripts/import-wordpress.ts --base=%WP_BASE%"
+    "supabase:import": "ts-node scripts/import-deals-to-supabase.ts"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.58.0",
     "dotenv": "^17.2.2",
-    "next": "14.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },

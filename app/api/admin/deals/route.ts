@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { readDeals, writeDeals, requireAdmin } from "@/lib/store";
+import { createDeal, readDeals, requireAdmin } from "@/lib/store";
 import type { Deal } from "@/types/deal";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function GET(req: Request) {
   try {
@@ -13,6 +14,32 @@ export async function GET(req: Request) {
   const q = (searchParams.get("q") || "").toLowerCase();
   const page = Math.max(1, Number(searchParams.get("page") || 1));
   const pageSize = Math.min(100, Math.max(1, Number(searchParams.get("pageSize") || 20)));
+  const supabase = getSupabaseAdmin();
+
+  if (supabase) {
+    const query = supabase.from("deals").select("*", { count: "estimated" });
+    if (q) {
+      query.or(
+        ["title", "provider", "category"].map((col) => `${col}.ilike.%${q}%`).join(",")
+      );
+    }
+    query.order("updatedAt", { ascending: false }).order("createdAt", { ascending: false });
+    query.range((page - 1) * pageSize, page * pageSize - 1);
+
+    const { data, error, count } = await query;
+    if (error) {
+      console.error("Supabase admin GET error", error);
+      return NextResponse.json({ message: "Failed to load deals" }, { status: 500 });
+    }
+
+    return NextResponse.json({
+      items: (data as Deal[]) || [],
+      total: count ?? ((data as Deal[])?.length || 0),
+      page,
+      pageSize,
+      totalPages: Math.max(1, Math.ceil((count ?? data?.length ?? 0) / pageSize)),
+    });
+  }
 
   const all = await readDeals();
   const filtered = q
@@ -44,10 +71,6 @@ export async function POST(req: Request) {
 
   const nowId = Date.now().toString();
   const id = (body.id && String(body.id)) || nowId;
-  const all = await readDeals();
-  if (all.some((d) => d.id === id)) {
-    return NextResponse.json({ message: "ID already exists" }, { status: 409 });
-  }
   const deal: Deal = {
     id,
     title: body.title || "Untitled",
@@ -76,7 +99,10 @@ export async function POST(req: Request) {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
-  all.unshift(deal);
-  await writeDeals(all);
-  return NextResponse.json(deal, { status: 201 });
+  try {
+    const created = await createDeal(deal);
+    return NextResponse.json(created, { status: 201 });
+  } catch (error: any) {
+    return NextResponse.json({ message: error?.message || "Failed to create deal" }, { status: error?.message === "ID already exists" ? 409 : 500 });
+  }
 }
