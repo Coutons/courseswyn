@@ -1,4 +1,4 @@
-import DealCard from "@/components/DealCard";
+﻿import DealCard from "@/components/DealCard";
 import { headers } from "next/headers";
 import { uniqueProviders } from "@/lib/mockData";
 import type { Metadata } from "next";
@@ -191,10 +191,6 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
 
   return (
     <div>
-      {/* TEMP DEBUG: remove after verifying production */}
-      <div style={{ padding: 8, border: "1px dashed #334155", borderRadius: 8, marginBottom: 8, background: "#0f1320", color: "#9fb0c8", fontSize: 12 }}>
-        Debug: total deals {total}, showing {lightItems.length} on page {page}/{totalPages}. First titles: {lightItems.slice(0, 2).map((x: any) => x.title).join(" | ")}
-      </div>
       <section
         style={{
           padding: 16,

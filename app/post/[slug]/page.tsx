@@ -10,5 +10,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default function LegacyPostRedirect({ params }: Props) {
-  permanentRedirect(`/deal/${params.slug}`);
+  const specials: Record<string, string> = {
+    "contact-us": "/contact",
+    blog: "/deal/blog",
+  };
+
+  const target = specials[params.slug] || `/deal/${params.slug}`;
+  permanentRedirect(target);
 }

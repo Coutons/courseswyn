@@ -111,15 +111,54 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </svg>
               </a>
             </h1>
-            <nav style={{
-              display: 'flex',
-              gap: '1.5rem',
-              alignItems: 'center'
-            }}>
-              <a href="/" className="nav-link">Home</a>
-              <a href="/categories" className="nav-link">Categories</a>
-              <a href="/search" className="nav-link">Courses</a>
-              <a href="/contact" className="nav-link">Contact</a>
+            <nav
+              style={{
+                display: "flex",
+                gap: "1.5rem",
+                alignItems: "center",
+                flex: 1,
+                justifyContent: "flex-end",
+              }}
+            >
+              <a href="/" className="nav-link">
+                Home
+              </a>
+              <a href="/categories" className="nav-link">
+                Categories
+              </a>
+              <a href="/search" className="nav-link">
+                Courses
+              </a>
+              <a href="/contact" className="nav-link">
+                Contact
+              </a>
+              <form
+                action="/search"
+                method="get"
+                style={{ display: "flex", alignItems: "center", gap: 8 }}
+              >
+                <input
+                  type="search"
+                  name="q"
+                  placeholder="Search courses..."
+                  aria-label="Search courses"
+                  style={{
+                    padding: "6px 10px",
+                    borderRadius: 999,
+                    border: "1px solid #1f2330",
+                    background: "#0f1320",
+                    color: "#e6e9f2",
+                    minWidth: 180,
+                  }}
+                />
+                <button
+                  type="submit"
+                  className="pill"
+                  style={{ padding: "6px 14px" }}
+                >
+                  Search
+                </button>
+              </form>
             </nav>
           </div>
         </header>
