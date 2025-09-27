@@ -3,6 +3,8 @@ import { readDeals } from "@/lib/store";
 import { promises as fs } from "fs";
 import path from "path";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "All Categories & Subcategories | Coursespeak",
   description: "Browse all primary categories and subcategories of Udemy deals and free coupons on Coursespeak.",
@@ -35,8 +37,7 @@ export default async function CategoriesPage() {
   const deals = await readDeals();
   const cats = new Map<string, { name: string; count: number; subs: Map<string, number> }>();
   for (const d of deals) {
-    const cName = normName((d as any).category);
-    if (!cName) continue;
+    const cName = normName((d as any).category) ?? "Uncategorized";
     const cKey = cName.toLowerCase();
     if (!cats.has(cKey)) cats.set(cKey, { name: cName, count: 0, subs: new Map() });
     const bucket = cats.get(cKey)!;
@@ -58,6 +59,30 @@ export default async function CategoriesPage() {
     } catch {}
     return { ...c, icon };
   }));
+
+  if (list.length === 0) {
+    return (
+      <div>
+        <section
+          style={{
+            padding: 16,
+            border: "1px solid #1f2330",
+            borderRadius: 12,
+            background: "linear-gradient(135deg, #0f1320 0%, #11182a 50%, #0f1320 100%)",
+            marginBottom: 16,
+          }}
+        >
+          <h1 style={{ marginBottom: 6 }}>All Categories & Subcategories (deals loaded: {deals.length})</h1>
+          <p className="muted" style={{ marginTop: 0 }}>
+            No categories were resolved from the current dataset. Total deals loaded: {deals.length}.
+          </p>
+          <p className="muted" style={{ marginTop: 4 }}>
+            Ensure each deal has a category or subcategory value, or check Supabase connectivity.
+          </p>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div>
