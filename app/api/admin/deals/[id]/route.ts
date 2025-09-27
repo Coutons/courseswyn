@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
-import { getDealById, requireAdmin, updateDeal, deleteDeal } from "@/lib/store";
+import type { NextRequest } from "next/server";
+import { getDealById, updateDeal, deleteDeal } from "@/lib/store";
 import type { Deal } from "@/types/deal";
+import { requireAdmin } from "@/lib/auth";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+function unauthorized(message = "Unauthorized") {
+  return NextResponse.json({ message }, { status: 401 });
+}
+
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     requireAdmin(req);
   } catch (e: any) {
-    return NextResponse.json({ message: e?.message || "Unauthorized" }, { status: 401 });
+    return unauthorized(e?.message);
   }
 
   const deal = await getDealById(params.id);
@@ -14,11 +20,11 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   return NextResponse.json(deal);
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     requireAdmin(req);
   } catch (e: any) {
-    return NextResponse.json({ message: e?.message || "Unauthorized" }, { status: 401 });
+    return unauthorized(e?.message);
   }
 
   let body: Partial<Deal>;
@@ -47,11 +53,11 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     requireAdmin(req);
   } catch (e: any) {
-    return NextResponse.json({ message: e?.message || "Unauthorized" }, { status: 401 });
+    return unauthorized(e?.message);
   }
 
   try {

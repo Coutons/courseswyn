@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useAdminAuth } from "@/components/AdminAuthGate";
 
 type Deal = {
   id: string;
@@ -16,13 +17,8 @@ type Deal = {
   expiresAt?: string;
 };
 
-const envDefaultToken = process.env.NEXT_PUBLIC_ADMIN_TOKEN;
-const DEFAULT_ADMIN_TOKEN =
-  (typeof envDefaultToken === "string" && envDefaultToken.trim()) ||
-  (process.env.NODE_ENV !== "production" ? "dev-admin" : "");
-
 export default function AdminDealsPage() {
-  const [token, setToken] = useState<string | null>(null);
+  const { refresh } = useAdminAuth();
   const [q, setQ] = useState("");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -31,25 +27,7 @@ export default function AdminDealsPage() {
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(20);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("coursespeak:adminToken");
-    if (saved) {
-      setToken(saved);
-      return;
-    }
-    if (DEFAULT_ADMIN_TOKEN) {
-      localStorage.setItem("coursespeak:adminToken", DEFAULT_ADMIN_TOKEN);
-      setToken(DEFAULT_ADMIN_TOKEN);
-    }
-  }, []);
-
-  const headers = useMemo(() => {
-    const h: Record<string, string> = { "Content-Type": "application/json" };
-    if (token) h["x-admin-token"] = token;
-    return h;
-  }, [token]);
-
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -57,8 +35,13 @@ export default function AdminDealsPage() {
       if (q) params.set("q", q);
       params.set("page", String(page));
       params.set("pageSize", String(pageSize));
-      const res = await fetch(`/api/admin/deals?${params.toString()}`, { headers });
-      if (res.status === 401) throw new Error("Unauthorized: set admin token");
+      const res = await fetch(`/api/admin/deals?${params.toString()}`, {
+        credentials: "include",
+      });
+      if (res.status === 401) {
+        await refresh();
+        throw new Error("Sesi admin berakhir. Silakan login kembali.");
+      }
       if (!res.ok) throw new Error(`Error ${res.status}`);
       const data = await res.json();
       setItems(data.items || []);
@@ -68,25 +51,19 @@ export default function AdminDealsPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [page, pageSize, q, refresh]);
 
   useEffect(() => {
-    if (!token) return;
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, page, pageSize]);
-
-  function onSetToken() {
-    const t = prompt("Enter ADMIN_PASSWORD token", token || DEFAULT_ADMIN_TOKEN || "");
-    if (!t) return;
-    localStorage.setItem("coursespeak:adminToken", t);
-    setToken(t);
-  }
+  }, [load]);
 
   async function onDelete(id: string) {
     if (!confirm("Delete this deal?")) return;
     try {
-      const res = await fetch(`/api/admin/deals/${id}`, { method: "DELETE", headers });
+      const res = await fetch(`/api/admin/deals/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
       if (!res.ok) throw new Error(`Delete failed (${res.status})`);
       await load();
     } catch (e: any) {
@@ -113,7 +90,8 @@ export default function AdminDealsPage() {
     try {
       const res = await fetch(`/api/admin/deals`, {
         method: "POST",
-        headers,
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ title, url, provider, price, slug }),
       });
       if (!res.ok) throw new Error(`Create failed (${res.status})`);
@@ -137,10 +115,6 @@ export default function AdminDealsPage() {
         <button className="pill" onClick={() => { setQ(""); setPage(1); load(); }}>Clear</button>
         <span style={{ marginLeft: "auto" }} />
         <button className="pill" onClick={onCreateQuick}>New Deal</button>
-        <button className="pill" onClick={onSetToken}>{token ? "Change Token" : "Set Token"}</button>
-        {!token && DEFAULT_ADMIN_TOKEN && (
-          <span className="muted">Dev default token: {DEFAULT_ADMIN_TOKEN}</span>
-        )}
       </div>
       {error && <div style={{ color: "#f87171", marginBottom: 8 }}>{error}</div>}
       {loading ? (

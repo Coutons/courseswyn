@@ -1,13 +1,19 @@
 import { NextResponse } from "next/server";
-import { createDeal, readDeals, requireAdmin } from "@/lib/store";
+import type { NextRequest } from "next/server";
+import { createDeal, readDeals } from "@/lib/store";
 import type { Deal } from "@/types/deal";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { requireAdmin } from "@/lib/auth";
 
-export async function GET(req: Request) {
+function unauthorizedResponse(message = "Unauthorized") {
+  return NextResponse.json({ message }, { status: 401 });
+}
+
+export async function GET(req: NextRequest) {
   try {
     requireAdmin(req);
   } catch (e: any) {
-    return NextResponse.json({ message: e?.message || "Unauthorized" }, { status: 401 });
+    return unauthorizedResponse(e?.message);
   }
 
   const { searchParams } = new URL(req.url);
@@ -55,11 +61,11 @@ export async function GET(req: Request) {
   return NextResponse.json({ items, total, page, pageSize, totalPages: Math.max(1, Math.ceil(total / pageSize)) });
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     requireAdmin(req);
   } catch (e: any) {
-    return NextResponse.json({ message: e?.message || "Unauthorized" }, { status: 401 });
+    return unauthorizedResponse(e?.message);
   }
 
   let body: Partial<Deal>;
