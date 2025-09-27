@@ -16,6 +16,11 @@ type Deal = {
   expiresAt?: string;
 };
 
+const envDefaultToken = process.env.NEXT_PUBLIC_ADMIN_TOKEN;
+const DEFAULT_ADMIN_TOKEN =
+  (typeof envDefaultToken === "string" && envDefaultToken.trim()) ||
+  (process.env.NODE_ENV !== "production" ? "dev-admin" : "");
+
 export default function AdminDealsPage() {
   const [token, setToken] = useState<string | null>(null);
   const [q, setQ] = useState("");
@@ -28,7 +33,14 @@ export default function AdminDealsPage() {
 
   useEffect(() => {
     const saved = localStorage.getItem("coursespeak:adminToken");
-    if (saved) setToken(saved);
+    if (saved) {
+      setToken(saved);
+      return;
+    }
+    if (DEFAULT_ADMIN_TOKEN) {
+      localStorage.setItem("coursespeak:adminToken", DEFAULT_ADMIN_TOKEN);
+      setToken(DEFAULT_ADMIN_TOKEN);
+    }
   }, []);
 
   const headers = useMemo(() => {
@@ -65,7 +77,7 @@ export default function AdminDealsPage() {
   }, [token, page, pageSize]);
 
   function onSetToken() {
-    const t = prompt("Enter ADMIN_PASSWORD token");
+    const t = prompt("Enter ADMIN_PASSWORD token", token || DEFAULT_ADMIN_TOKEN || "");
     if (!t) return;
     localStorage.setItem("coursespeak:adminToken", t);
     setToken(t);
@@ -126,6 +138,9 @@ export default function AdminDealsPage() {
         <span style={{ marginLeft: "auto" }} />
         <button className="pill" onClick={onCreateQuick}>New Deal</button>
         <button className="pill" onClick={onSetToken}>{token ? "Change Token" : "Set Token"}</button>
+        {!token && DEFAULT_ADMIN_TOKEN && (
+          <span className="muted">Dev default token: {DEFAULT_ADMIN_TOKEN}</span>
+        )}
       </div>
       {error && <div style={{ color: "#f87171", marginBottom: 8 }}>{error}</div>}
       {loading ? (

@@ -27,10 +27,11 @@ export default function DealCard({ deal }: { deal: any }) {
           <div style={{ marginBottom: 8, position: "relative" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={`/api/image?src=${encodeURIComponent(String(deal.image))}`}
+              src={String(deal.image)}
               alt={title}
               loading="lazy"
               style={{ width: "100%", borderRadius: 8, border: "1px solid #1f2330", display: "block" }}
+              referrerPolicy="no-referrer"
             />
             {deal.duration && (
               <span
@@ -95,22 +96,13 @@ export default function DealCard({ deal }: { deal: any }) {
         {deal.coupon && <span className="coupon">Coupon: {deal.coupon}</span>}
         <div style={{ display: "flex", gap: 8 }}>
           <a className="btn" href={`/deal/${deal.slug || deal.id}`}>Details</a>
-          <a 
-            className="btn" 
+          <a
+            className="btn"
             href={buildDealLink(deal)}
-            target="_blank" 
+            target="_blank"
             rel="noreferrer sponsored"
             data-provider={deal.provider?.toLowerCase()}
             data-impact="true"
-            onClick={(e) => {
-              console.log('Deal card clicked:', {
-                finalUrl: deal.finalUrl,
-                builtUrl: buildDealLink(deal),
-                provider: deal.provider,
-                coupon: deal.coupon,
-                originalUrl: deal.url
-              });
-            }}
           >
             Get Deal
           </a>

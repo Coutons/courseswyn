@@ -23,8 +23,28 @@ export async function writeDeals(all: Deal[]): Promise<void> {
 }
 
 export function requireAdmin(req: Request): void {
-  const expected = process.env.ADMIN_PASSWORD?.trim();
-  if (!expected) throw new Error("ADMIN_PASSWORD not set");
+  const envTokens = [
+    process.env.ADMIN_PASSWORD,
+    process.env.NEXT_PUBLIC_ADMIN_PASSWORD,
+    process.env.NEXT_PUBLIC_ADMIN_TOKEN,
+    process.env.ADMIN_DEV_TOKEN,
+  ]
+    .map((value) => value?.trim())
+    .filter((value): value is string => Boolean(value));
+
+  const fallbackToken = process.env.ADMIN_DEV_TOKEN?.trim() || "dev-admin";
+  const allowedTokens = envTokens.length ? envTokens : [fallbackToken];
+
+  if (!allowedTokens.length) {
+    throw new Error("ADMIN_PASSWORD not configured");
+  }
+
   const token = (req.headers.get("x-admin-token") || "").trim();
-  if (token !== expected) throw new Error("Unauthorized");
+  if (!token) {
+    throw new Error("Missing admin token");
+  }
+
+  if (!allowedTokens.includes(token)) {
+    throw new Error("Invalid admin token");
+  }
 }

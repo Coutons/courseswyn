@@ -8,6 +8,8 @@ html,body{ padding:0; margin:0; background:var(--bg); color:var(--text); font-fa
 .site-header nav{ margin-left:auto; display:flex; gap:12px; }
 .site-header a{ color:var(--muted); text-decoration:none; padding:8px 10px; border-radius:6px; }
 .site-header a:hover{ color:var(--text); background:#151a28; }
+.nav-link{ color:#eaf4ff; text-decoration:none; padding:0.5rem 0; border-bottom:2px solid transparent; transition:border-color 0.2s; }
+.nav-link:hover{ border-bottom:2px solid #3b82f6; }
 .site-footer{ border-top:1px solid #1f2330; padding:24px 0; margin-top:32px; color:var(--muted); }
 
 h2{ font-size:22px; margin:20px 0; }
@@ -16,7 +18,7 @@ h2{ font-size:22px; margin:20px 0; }
 @media (max-width: 900px){ .detail-grid{ grid-template-columns: 1fr; } }
 .card{ background:var(--card); border:1px solid #1f2330; border-radius:12px; overflow:hidden; display:flex; flex-direction:column; }
 .card-header{ padding:14px 16px; border-bottom:1px solid #1f2330; }
-.card-header h3{ font-size:16px; margin:0; line-height:1.3; height:2.6em; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+.card-header h3{ font-size:16px; margin:0; line-height:1.3; height:2.6em; overflow:hidden; display:-webkit-box; line-clamp:2; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
 .card-body{ padding:14px 16px; display:grid; gap:10px; }
 .meta{ display:flex; gap:8px; color:var(--muted); font-size:12px; }
 .prices{ display:flex; gap:10px; align-items:baseline; }

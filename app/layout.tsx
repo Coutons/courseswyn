@@ -111,22 +111,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </svg>
               </a>
             </h1>
-            <style>{`
-              .nav-link {
-                color: #eaf4ff;
-                text-decoration: none;
-                padding: 0.5rem 0;
-                border-bottom: 2px solid transparent;
-                transition: border-color 0.2s;
-                border-radius: 6px;
-                display: block;
-              }
-              .nav-link:hover {
-                border-bottom: 2px solid #3b82f6;
-                background: #151a28;
-                color: #ffffff;
-              }
-            `}</style>
             <nav style={{
               display: 'flex',
               gap: '1.5rem',
@@ -134,7 +118,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             }}>
               <a href="/" className="nav-link">Home</a>
               <a href="/categories" className="nav-link">Categories</a>
-              <a href="/search" className="nav-link">Search</a>
+              <a href="/search" className="nav-link">Courses</a>
               <a href="/contact" className="nav-link">Contact</a>
             </nav>
           </div>

@@ -37,6 +37,11 @@ type Deal = {
   seoNofollow?: boolean;
 };
 
+const envDefaultToken = process.env.NEXT_PUBLIC_ADMIN_TOKEN;
+const DEFAULT_ADMIN_TOKEN =
+  (typeof envDefaultToken === "string" && envDefaultToken.trim()) ||
+  (process.env.NODE_ENV !== "production" ? "dev-admin" : "");
+
 export default function EditDealPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
@@ -48,7 +53,14 @@ export default function EditDealPage() {
 
   useEffect(() => {
     const saved = localStorage.getItem("coursespeak:adminToken");
-    if (saved) setToken(saved);
+    if (saved) {
+      setToken(saved);
+      return;
+    }
+    if (DEFAULT_ADMIN_TOKEN) {
+      localStorage.setItem("coursespeak:adminToken", DEFAULT_ADMIN_TOKEN);
+      setToken(DEFAULT_ADMIN_TOKEN);
+    }
   }, []);
 
   const headers = useMemo(() => {
@@ -107,7 +119,7 @@ export default function EditDealPage() {
   }, [token, params.id, headers]);
 
   function onSetToken() {
-    const t = prompt("Enter ADMIN_PASSWORD token");
+    const t = prompt("Enter ADMIN_PASSWORD token", token || DEFAULT_ADMIN_TOKEN || "");
     if (!t) return;
     localStorage.setItem("coursespeak:adminToken", t);
     setToken(t);
@@ -164,6 +176,9 @@ export default function EditDealPage() {
         <h2>Edit Deal</h2>
         <p className="muted">Unauthorized: Please set your admin token.</p>
         <button className="pill" onClick={onSetToken}>Set Token</button>
+        {DEFAULT_ADMIN_TOKEN && (
+          <p className="muted" style={{ marginTop: 12 }}>Dev default token: {DEFAULT_ADMIN_TOKEN}</p>
+        )}
       </div>
     );
   }
