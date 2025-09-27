@@ -83,40 +83,28 @@ export default function ContactPage() {
         </p>
       </header>
 
-      <form
-        action="https://formsubmit.co/contact@coursespeak.com"
-        method="POST"
+      <div
         style={{
-          display: "grid",
-          gap: 20,
-          padding: 24,
           borderRadius: 16,
           border: "1px solid #1f2330",
           background: "linear-gradient(145deg, #0f1320, #151b2c)",
           boxShadow: "0 16px 40px rgba(8, 13, 26, 0.35)",
+          overflow: "hidden",
         }}
       >
-        <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
-          <Field label="Name" name="name" required placeholder="Jane Doe" />
-          <Field label="Email" name="email" type="email" required placeholder="you@company.com" />
-          <Field label="Company" name="company" placeholder="Company or organization" />
-          <Field label="Topic" name="topic" placeholder="e.g. Sponsorship, Support" />
-        </div>
-
-        <TextArea label="How can we help?" name="message" required placeholder="Share as many details as possible" />
-
-        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-          <button type="submit" className="btn" style={{ padding: "10px 18px" }}>
-            Send message
-          </button>
-          <span className="muted" style={{ fontSize: 12 }}>
-            We respect your privacy. No spam, ever.
-          </span>
-        </div>
-
-        <input type="hidden" name="_next" value="https://coursespeak.com/contact?submitted=1" />
-        <input type="hidden" name="_captcha" value="false" />
-      </form>
+        <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSctXPxQ9aXJa69FOJVgssa-V5niY1LeE_aDqVmbgukaysRKsQ/viewform?embedded=true"
+          width="100%"
+          height="820"
+          style={{ border: 0 }}
+          frameBorder="0"
+          marginHeight={0}
+          marginWidth={0}
+          title="Coursespeak Contact Form"
+        >
+          Loading…
+        </iframe>
+      </div>
 
       <aside style={{ display: "grid", gap: 12 }}>
         <h2 style={{ margin: 0, fontSize: 20 }}>Prefer direct contact?</h2>
@@ -127,13 +115,13 @@ export default function ContactPage() {
             </a>
           </li>
           <li>
-            <a href="https://x.com/coursespeak" target="_blank" rel="noreferrer" style={{ color: "#3b82f6" }}>
+            <a href="https://x.com/courses_peak" target="_blank" rel="noreferrer" style={{ color: "#3b82f6" }}>
               Twitter / X
             </a>
           </li>
           <li>
-            <a href="https://discord.gg/coursespeak" target="_blank" rel="noreferrer" style={{ color: "#3b82f6" }}>
-              Join our Discord community
+            <a href="https://www.facebook.com/coursespeak24" target="_blank" rel="noreferrer" style={{ color: "#3b82f6" }}>
+              Join our facebook community
             </a>
           </li>
         </ul>
