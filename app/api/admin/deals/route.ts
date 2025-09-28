@@ -23,30 +23,32 @@ export async function GET(req: NextRequest) {
   const supabase = getSupabaseAdmin();
 
   if (supabase) {
-    const query = supabase.from("deals").select("*", { count: "estimated" });
-    if (q) {
-      query.or(
-        ["title", "provider", "category"].map((col) => `${col}.ilike.%${q}%`).join(",")
-      );
-    }
-    query
-      .order("createdAt", { ascending: false })
-      .order("updatedAt", { ascending: false });
-    query.range((page - 1) * pageSize, page * pageSize - 1);
+    try {
+      const query = supabase.from("deals").select("*", { count: "estimated" });
+      if (q) {
+        query.or(
+          ["title", "provider", "category"].map((col) => `${col}.ilike.%${q}%`).join(",")
+        );
+      }
+      query
+        .order("createdAt", { ascending: false })
+        .order("updatedAt", { ascending: false });
+      query.range((page - 1) * pageSize, page * pageSize - 1);
 
-    const { data, error, count } = await query;
-    if (error) {
+      const { data, error, count } = await query;
+      if (!error) {
+        return NextResponse.json({
+          items: (data as Deal[]) || [],
+          total: count ?? ((data as Deal[])?.length || 0),
+          page,
+          pageSize,
+          totalPages: Math.max(1, Math.ceil((count ?? data?.length ?? 0) / pageSize)),
+        });
+      }
       console.error("Supabase admin GET error", error);
-      return NextResponse.json({ message: "Failed to load deals" }, { status: 500 });
+    } catch (error) {
+      console.error("Supabase admin GET exception", error);
     }
-
-    return NextResponse.json({
-      items: (data as Deal[]) || [],
-      total: count ?? ((data as Deal[])?.length || 0),
-      page,
-      pageSize,
-      totalPages: Math.max(1, Math.ceil((count ?? data?.length ?? 0) / pageSize)),
-    });
   }
 
   const all = await readDeals();
