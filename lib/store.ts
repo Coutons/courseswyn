@@ -72,12 +72,15 @@ export async function getDealById(idOrSlug: string): Promise<Deal | null> {
 export async function createDeal(deal: Deal): Promise<Deal> {
   const supabase = getSupabaseAdmin();
   if (supabase) {
-    const { data, error } = await supabase.from("deals").insert(deal).select("*").single();
-    if (error) {
+    try {
+      const { data, error } = await supabase.from("deals").insert(deal).select("*").single();
+      if (!error) {
+        return data as Deal;
+      }
       console.error("Supabase createDeal error", error);
-      throw new Error(error.message || "Failed to create deal");
+    } catch (error) {
+      console.error("Supabase createDeal exception", error);
     }
-    return data as Deal;
   }
 
   const all = await readDealsFromFile();
@@ -89,15 +92,23 @@ export async function createDeal(deal: Deal): Promise<Deal> {
 export async function updateDeal(id: string, patch: Partial<Deal>): Promise<Deal> {
   const supabase = getSupabaseAdmin();
   if (supabase) {
-    const { data, error } = await supabase.from("deals").update(patch).eq("id", id).select("*").single();
-    if (error) {
+    try {
+      const { data, error } = await supabase
+        .from("deals")
+        .update(patch)
+        .eq("id", id)
+        .select("*")
+        .single();
+      if (!error) {
+        return data as Deal;
+      }
       if (error.code === "PGRST116") {
         throw new Error("Not found");
       }
       console.error("Supabase updateDeal error", error);
-      throw new Error(error.message || "Failed to update deal");
+    } catch (error) {
+      console.error("Supabase updateDeal exception", error);
     }
-    return data as Deal;
   }
 
   const all = await readDealsFromFile();
@@ -114,12 +125,15 @@ export async function updateDeal(id: string, patch: Partial<Deal>): Promise<Deal
 export async function deleteDeal(id: string): Promise<void> {
   const supabase = getSupabaseAdmin();
   if (supabase) {
-    const { error } = await supabase.from("deals").delete().eq("id", id);
-    if (error) {
+    try {
+      const { error } = await supabase.from("deals").delete().eq("id", id);
+      if (!error) {
+        return;
+      }
       console.error("Supabase deleteDeal error", error);
-      throw new Error(error.message || "Failed to delete deal");
+    } catch (error) {
+      console.error("Supabase deleteDeal exception", error);
     }
-    return;
   }
 
   const all = await readDealsFromFile();
