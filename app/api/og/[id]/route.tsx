@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { getDealByIdOrSlug } from "@/lib/store";
+import { getDealById } from "@/lib/store";
 
 const FONT_URL = "https://raw.githubusercontent.com/googlefonts/noto-fonts/main/ttf/NotoSans/NotoSans-Regular.ttf";
 let fontDataPromise: Promise<ArrayBuffer> | null = null;
@@ -34,7 +34,7 @@ export async function GET(
   let title = "Udemy Coupons";
   let found = false;
   try {
-    const deal = await getDealByIdOrSlug(id);
+    const deal = await getDealById(id);
     if (deal?.title) {
       title = sanitize(String(deal.title), 90);
       found = true;
