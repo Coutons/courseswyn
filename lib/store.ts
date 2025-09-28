@@ -51,7 +51,6 @@ export async function getDealById(idOrSlug: string): Promise<Deal | null> {
     const byId = await supabase.from("deals").select("*").eq("id", key).maybeSingle();
     if (byId.error && byId.error.code !== "PGRST116") {
       console.error("Supabase getDealById error", byId.error);
-      throw new Error("Failed to fetch deal");
     }
     if (byId.data) {
       return byId.data as Deal;
@@ -60,7 +59,6 @@ export async function getDealById(idOrSlug: string): Promise<Deal | null> {
     const bySlug = await supabase.from("deals").select("*").eq("slug", key).maybeSingle();
     if (bySlug.error && bySlug.error.code !== "PGRST116") {
       console.error("Supabase getDealById slug error", bySlug.error);
-      throw new Error("Failed to fetch deal");
     }
     if (bySlug.data) {
       return bySlug.data as Deal;
