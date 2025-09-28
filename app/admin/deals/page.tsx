@@ -134,12 +134,16 @@ export default function AdminDealsPage() {
               </tr>
             </thead>
             <tbody>
-              {items.map((d) => (
-                <tr key={d.id}>
-                  <td style={{ padding: 8, borderBottom: "1px solid #1f2330" }}>{d.title}</td>
-                  <td style={{ padding: 8, borderBottom: "1px solid #1f2330" }}>{d.provider}</td>
-                  <td style={{ padding: 8, borderBottom: "1px solid #1f2330" }}>{d.price === 0 ? "Free" : `$${d.price.toFixed(2)}`}</td>
-                  <td style={{ padding: 8, borderBottom: "1px solid #1f2330" }}>{d.coupon || "-"}</td>
+              {items.map((d) => {
+                const hasPrice = typeof d.price === "number" && Number.isFinite(d.price);
+                const priceLabel = hasPrice ? (d.price === 0 ? "Free" : `$${d.price.toFixed(2)}`) : "-";
+
+                return (
+                  <tr key={d.id}>
+                    <td style={{ padding: 8, borderBottom: "1px solid #1f2330" }}>{d.title}</td>
+                    <td style={{ padding: 8, borderBottom: "1px solid #1f2330" }}>{d.provider}</td>
+                    <td style={{ padding: 8, borderBottom: "1px solid #1f2330" }}>{priceLabel}</td>
+                    <td style={{ padding: 8, borderBottom: "1px solid #1f2330" }}>{d.coupon || "-"}</td>
                   <td style={{ padding: 8, borderBottom: "1px solid #1f2330" }}>{d.category || "-"}</td>
                   <td style={{ padding: 8, borderBottom: "1px solid #1f2330" }}>{d.expiresAt ? new Date(d.expiresAt).toLocaleString() : "-"}</td>
                   <td style={{ padding: 8, borderBottom: "1px solid #1f2330", display: "flex", gap: 8 }}>
@@ -147,8 +151,9 @@ export default function AdminDealsPage() {
                     <a className="pill" href={`/admin/deals/${d.id}/edit`}>Edit</a>
                     <button className="pill" onClick={() => onDelete(d.id)}>Delete</button>
                   </td>
-                </tr>
-              ))}
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
