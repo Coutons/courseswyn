@@ -29,7 +29,9 @@ export async function GET(req: NextRequest) {
         ["title", "provider", "category"].map((col) => `${col}.ilike.%${q}%`).join(",")
       );
     }
-    query.order("updatedAt", { ascending: false }).order("createdAt", { ascending: false });
+    query
+      .order("createdAt", { ascending: false })
+      .order("updatedAt", { ascending: false });
     query.range((page - 1) * pageSize, page * pageSize - 1);
 
     const { data, error, count } = await query;

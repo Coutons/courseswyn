@@ -44,20 +44,31 @@ export async function readDeals(): Promise<Deal[]> {
   return await readDealsFromFile();
 }
 
-export async function getDealById(id: string): Promise<Deal | null> {
+export async function getDealById(idOrSlug: string): Promise<Deal | null> {
+  const key = String(idOrSlug);
   const supabase = getSupabaseAdmin();
   if (supabase) {
-    const { data, error } = await supabase.from("deals").select("*").eq("id", id).maybeSingle();
-    if (error) {
-      if (error.code === "PGRST116") return null; // Row not found
-      console.error("Supabase getDealById error", error);
+    const byId = await supabase.from("deals").select("*").eq("id", key).maybeSingle();
+    if (byId.error && byId.error.code !== "PGRST116") {
+      console.error("Supabase getDealById error", byId.error);
       throw new Error("Failed to fetch deal");
     }
-    return (data as Deal) ?? null;
+    if (byId.data) {
+      return byId.data as Deal;
+    }
+
+    const bySlug = await supabase.from("deals").select("*").eq("slug", key).maybeSingle();
+    if (bySlug.error && bySlug.error.code !== "PGRST116") {
+      console.error("Supabase getDealById slug error", bySlug.error);
+      throw new Error("Failed to fetch deal");
+    }
+    if (bySlug.data) {
+      return bySlug.data as Deal;
+    }
   }
 
   const all = await readDealsFromFile();
-  return all.find((d) => d.id === id) ?? null;
+  return all.find((d) => d.id === key || d.slug === key) ?? null;
 }
 
 export async function createDeal(deal: Deal): Promise<Deal> {

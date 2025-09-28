@@ -2,7 +2,7 @@
   "name": "coursespeak",
   "version": "0.1.0",
   "private": true,
-  "description": "Clone of real.discount built with Next.js",
+  "description": "coourses online coupons built with Next.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

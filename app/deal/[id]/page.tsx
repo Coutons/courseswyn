@@ -1,18 +1,20 @@
 import type { Deal } from "@/types/deal";
 import type { Metadata } from "next";
-import { headers } from "next/headers";
-import { readDeals } from "@/lib/store";
+import { readDeals, getDealById } from "@/lib/store";
 import { renderMarkdownToHtml } from "@/lib/markdown";
 import ActionsPanel from "@/components/ActionsPanel";
 import RelatedList from "@/components/RelatedList";
 import { buildDealLink } from "@/lib/links";
 
 async function getDeal(id: string): Promise<Deal> {
-  const host = headers().get("host");
-  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
-  const res = await fetch(`${protocol}://${host}/api/deals/${id}`, { cache: "no-store" });
-  if (!res.ok) throw new Error("Deal not found");
-  return res.json();
+  const deal = (await getDealById(id)) ?? (await findBySlug(id));
+  if (!deal) throw new Error("Deal not found");
+  return deal;
+}
+
+async function findBySlug(slug: string): Promise<Deal | null> {
+  const all = await readDeals();
+  return all.find((d) => d.slug === slug) ?? null;
 }
 
 function normalizeTitle(s: string) {
