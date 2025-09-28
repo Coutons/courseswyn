@@ -1,4 +1,4 @@
-﻿import DealCard from "@/components/DealCard";
+import DealCard from "@/components/DealCard";
 import { headers } from "next/headers";
 import { uniqueProviders } from "@/lib/mockData";
 import type { Metadata } from "next";
@@ -56,7 +56,11 @@ function sortList(items: any[], sort?: string): any[] {
       return [...items].sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
     case "newest":
     default:
-      return [...items].sort((a, b) => new Date(b.expiresAt ?? 0).getTime() - new Date(a.expiresAt ?? 0).getTime());
+      return [...items].sort((a, b) => {
+        const updatedA = new Date(a.updatedAt ?? a.createdAt ?? a.expiresAt ?? 0).getTime();
+        const updatedB = new Date(b.updatedAt ?? b.createdAt ?? b.expiresAt ?? 0).getTime();
+        return updatedB - updatedA;
+      });
   }
 }
 

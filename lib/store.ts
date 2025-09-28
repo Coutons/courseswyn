@@ -116,7 +116,13 @@ export async function updateDeal(id: string, patch: Partial<Deal>): Promise<Deal
   if (idx === -1) {
     throw new Error("Not found");
   }
-  const next = { ...all[idx], ...patch } as Deal;
+  const base = all[idx];
+  const next: Deal = {
+    ...base,
+    ...patch,
+    createdAt: base.createdAt ?? new Date().toISOString(),
+    updatedAt: patch.updatedAt ?? new Date().toISOString(),
+  };
   all[idx] = next;
   await writeDealsToFile(all);
   return next;
