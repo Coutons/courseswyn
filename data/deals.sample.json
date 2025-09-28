@@ -1,0 +1,12 @@
+[
+  {
+    "id": "sample-id",
+    "title": "Sample Deal",
+    "provider": "Udemy",
+    "price": 0,
+    "url": "https://example.com/sample-course",
+    "slug": "sample-deal",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]
