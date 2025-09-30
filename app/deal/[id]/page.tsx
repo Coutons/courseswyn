@@ -363,16 +363,34 @@ export default async function DealDetail({ params }: { params: { id: string } })
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   try {
     const d = await getDeal(params.id);
+    const normalizedTitle = normalizeTitle(d.title);
+    const priceLabel =
+      typeof d.price === "number" && isFinite(d.price)
+        ? d.price === 0
+          ? "Free"
+          : `$${d.price.toFixed(2)}`
+        : undefined;
+    const fallbackDescription = [d.provider, d.category, priceLabel]
+      .filter((part): part is string => Boolean(part))
+      .join(" • ");
+    const description = (d.description ?? "").trim() || fallbackDescription;
     return {
-      title: `${d.title} | Coursespeak Deals`,
-      description: `${d.provider}${d.category ? ` • ${d.category}` : ""} • ${d.price === 0 ? "Free" : `$${d.price.toFixed(2)}`}`,
+      title: `${normalizedTitle} | Courseswyn`,
+      description,
       alternates: { canonical: `/deal/${d.id}` },
       openGraph: {
-        title: d.title,
-        description: `${d.provider}${d.category ? ` • ${d.category}` : ""}`,
+        title: normalizedTitle,
+        description,
         url: `/deal/${d.id}`,
-        siteName: "Coursespeak",
-        type: "website",
+        siteName: "Courseswyn",
+        type: "article",
+        images: d.image ? [d.image] : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: normalizedTitle,
+        description,
+        images: d.image ? [d.image] : undefined,
       },
     };
   } catch {
