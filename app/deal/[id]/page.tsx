@@ -231,7 +231,7 @@ export default async function DealDetail({ params }: { params: { id: string } })
 
           {d.learn?.length ? (
             <section style={{ marginTop: 24 }}>
-              <h3>What you'll learn</h3>
+              <h3>What you&apos;ll learn</h3>
               <ul style={{ display: "grid", gap: 8, paddingLeft: 18 }}>
                 {d.learn.map((item, idx) => (
                   <li key={idx}>{item}</li>
@@ -374,23 +374,37 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       .filter((part): part is string => Boolean(part))
       .join(" • ");
     const description = (d.description ?? "").trim() || fallbackDescription;
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+    const ogPrimary = d.image ? String(d.image) : `${siteUrl}/api/og/${d.id}`;
+    const ogFallback = `${siteUrl}/api/og/${d.id}`;
+    const openGraphImages = [
+      ogPrimary ? { url: ogPrimary } : null,
+      ogFallback ? { url: ogFallback, width: 1200, height: 630 } : null,
+    ].filter(Boolean) as { url: string; width?: number; height?: number }[];
+
+    const socialImages = [ogPrimary, ogFallback].filter(Boolean) as string[];
+
+    const ogMeta: Record<string, string> = d.image
+      ? { "og:image": ogPrimary }
+      : { "og:image": ogPrimary, "og:image:width": "1200", "og:image:height": "630" };
     return {
       title: `${normalizedTitle} | Courseswyn`,
       description,
       alternates: { canonical: `/deal/${d.id}` },
+      other: ogMeta,
       openGraph: {
         title: normalizedTitle,
         description,
         url: `/deal/${d.id}`,
         siteName: "Courseswyn",
         type: "article",
-        images: d.image ? [d.image] : undefined,
+        images: openGraphImages,
       },
       twitter: {
         card: "summary_large_image",
         title: normalizedTitle,
         description,
-        images: d.image ? [d.image] : undefined,
+        images: socialImages,
       },
     };
   } catch {
