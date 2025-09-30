@@ -17,7 +17,7 @@ Courseswyn is a Next.js app for discovering the latest course deals and coupons.
 2. Run the dev server:
    npm run dev
 
-3. Open http://localhost:3002
+3. Open http://localhost:port
 
 ## Structure
 
