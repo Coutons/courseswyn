@@ -10,14 +10,25 @@ import { promises as fs } from "fs";
 import path from "path";
 
 export const metadata: Metadata = {
-  title: "100% Off and Free Udemy Coupons | Coursespeak Deals",
-  description: "Discover 100% Off and Free Udemy Coupons updated daily. Browse the latest Udemy discounts, free courses, and best deals curated by Coursespeak.",
+  title: "Udemy Coupons & 100% Off Deals | Courseswyn",
+  description:
+    "Discover Udemy coupons, promo codes, and 100% off course deals updated daily. Browse the latest Udemy discounts and free courses curated by Courseswyn.",
+  keywords: [
+    "Udemy coupons",
+    "Udemy coupon codes",
+    "Udemy promo codes",
+    "Udemy discounts",
+    "Udemy deals",
+    "free Udemy courses",
+    "online learning coupons",
+    "Courseswyn deals",
+  ],
   alternates: { canonical: "/" },
   openGraph: {
-    title: "100% Off and Free Udemy Coupons | Coursespeak Deals",
-    description: "Find 100% Off and Free Udemy Coupons. New deals and free courses added daily.",
+    title: "Udemy Coupons & 100% Off Deals | Courseswyn",
+    description: "Find verified Udemy coupons, 100% off course deals, and free class offers curated by Courseswyn.",
     url: "/",
-    siteName: "Coursespeak",
+    siteName: "Courseswyn",
     type: "website",
   },
 };
@@ -193,23 +204,67 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
       }
     : undefined;
 
+  const makeParams = (overrides: Record<string, string | undefined> = {}) => {
+    const params = new URLSearchParams();
+    if (searchParams.q) params.set("q", searchParams.q);
+    if (searchParams.category) params.set("category", searchParams.category);
+    if (searchParams.sort) params.set("sort", searchParams.sort);
+    Object.entries(overrides).forEach(([key, value]) => {
+      if (value) params.set(key, value);
+    });
+    return params;
+  };
+
+  const udemyActive = (searchParams.provider || "").toLowerCase() === "udemy";
+  const udemyFreeActive = udemyActive && (searchParams.freeOnly === "1" || searchParams.freeOnly === "true");
+
+  const filterChips: Array<{ label: string; href: string; active: boolean }> = [
+    {
+      label: "All Deals",
+      href: `/?${makeParams({ provider: undefined, freeOnly: undefined }).toString()}`,
+      active: !searchParams.provider && !searchParams.freeOnly,
+    },
+    {
+      label: "Udemy Deals",
+      href: `/?${makeParams({ provider: "udemy", freeOnly: undefined }).toString()}`,
+      active: udemyActive && !searchParams.freeOnly,
+    },
+    {
+      label: "100% Off Udemy Coupons",
+      href: `/?${makeParams({ provider: "udemy", freeOnly: "1" }).toString()}`,
+      active: udemyFreeActive,
+    },
+    {
+      label: "Free Udemy Courses",
+      href: `/?${makeParams({ provider: "udemy", freeOnly: "1" }).toString()}`,
+      active: udemyFreeActive,
+    },
+  ];
+
+  const sortOptions: Array<{ key: string; label: string }> = [
+    { key: "newest", label: "Newest" },
+    { key: "rating", label: "Rating" },
+    { key: "students", label: "Students" },
+    { key: "price", label: "Price" },
+  ];
+
   return (
     <div>
       <section
         style={{
           padding: 16,
-          border: "1px solid #1f2330",
+          border: "1px solid rgba(20, 184, 166, 0.24)",
           borderRadius: 12,
-          background: "linear-gradient(135deg, #0f1320 0%, #11182a 50%, #0f1320 100%)",
+          background: "linear-gradient(135deg, #06212b 0%, #0d2f3c 50%, #06212b 100%)",
         }}
       >
-        <h1 style={{ marginBottom: 6 }}>100% Off and Free Udemy Coupons</h1>
-        <div style={{ color: "#a9b0c0", marginBottom: 8 }}>{total} results</div>
+        <h1 style={{ marginBottom: 6 }}>Udemy Coupons & 100% Off Course Deals</h1>
+        <div style={{ color: "#00a76f", marginBottom: 8 }}>{total} results</div>
         <p className="muted" style={{ marginTop: 0, marginBottom: 0 }}>
-          Daily updated collection of Udemy deals featuring 100% off coupons and free Udemy courses. Filter by provider, category, price, and more.
+          Daily updated collection of Udemy coupons featuring 100% off codes, promo discounts, and free Udemy courses. Filter by provider, category, price, and more.
         </p>
         <p className="muted" style={{ marginTop: 8, marginBottom: 0, fontSize: 13 }}>
-          Find free Udemy courses, 100% off Udemy coupons, Udemy discount codes, and the latest Udemy deals updated daily. Browse all topics on our <a href="/categories" style={{ color: "#eaf4ff" }}>Categories</a> page.
+          Find free Udemy courses, 100% off Udemy coupons, Udemy discount codes, and the latest Udemy deals updated daily. Browse all topics on the <a href="/categories" style={{ color: "var(--brand)", fontWeight: 600 }}>Courseswyn Categories</a> page.
         </p>
       </section>
 
@@ -227,97 +282,46 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
 
       {/* SEO keyword chips (Coursera removed) */}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12, marginBottom: 12 }}>
-        {(() => {
-          const chips: Array<{ label: string; href: string; active: boolean }> = [];
-          // All Deals
-          {
-            const sp = new URLSearchParams();
-            if (searchParams.q) sp.set("q", searchParams.q);
-            if (searchParams.category) sp.set("category", searchParams.category);
-            if (searchParams.sort) sp.set("sort", searchParams.sort);
-            chips.push({ label: "All Deals", href: `/?${sp.toString()}`, active: !searchParams.provider && !searchParams.freeOnly });
-          }
-          // Udemy Deals
-          {
-            const sp = new URLSearchParams();
-            if (searchParams.q) sp.set("q", searchParams.q);
-            if (searchParams.category) sp.set("category", searchParams.category);
-            if (searchParams.sort) sp.set("sort", searchParams.sort);
-            sp.set("provider", "udemy");
-            chips.push({ label: "Udemy Deals", href: `/?${sp.toString()}`, active: (searchParams.provider || "").toLowerCase() === "udemy" && !searchParams.freeOnly });
-          }
-          // 100% Off Udemy Coupons
-          {
-            const sp = new URLSearchParams();
-            if (searchParams.q) sp.set("q", searchParams.q);
-            if (searchParams.category) sp.set("category", searchParams.category);
-            if (searchParams.sort) sp.set("sort", searchParams.sort);
-            sp.set("provider", "udemy");
-            sp.set("freeOnly", "1");
-            const active = (searchParams.provider || "").toLowerCase() === "udemy" && (searchParams.freeOnly === "1" || searchParams.freeOnly === "true");
-            chips.push({ label: "100% Off Udemy Coupons", href: `/?${sp.toString()}`, active });
-          }
-          // Free Udemy Courses
-          {
-            const sp = new URLSearchParams();
-            if (searchParams.q) sp.set("q", searchParams.q);
-            if (searchParams.category) sp.set("category", searchParams.category);
-            if (searchParams.sort) sp.set("sort", searchParams.sort);
-            sp.set("provider", "udemy");
-            sp.set("freeOnly", "1");
-            const active = (searchParams.provider || "").toLowerCase() === "udemy" && (searchParams.freeOnly === "1" || searchParams.freeOnly === "true");
-            chips.push({ label: "Free Udemy Courses", href: `/?${sp.toString()}`, active });
-          }
-          return chips.map((c) => (
-            <a
-              key={c.label}
-              href={c.href}
-              style={{
-                padding: "6px 10px",
-                borderRadius: 999,
-                border: "1px solid #1f2330",
-                background: c.active ? "#151a28" : "#0f1320",
-                color: "#eaf4ff",
-                textDecoration: "none",
-                fontSize: 12,
-                whiteSpace: "nowrap",
-              }}
-            >
-              {c.label}
-            </a>
-          ));
-        })()}
+        {filterChips.map((chip) => (
+          <a
+            key={chip.label}
+            href={chip.href}
+            style={{
+              padding: "6px 10px",
+              borderRadius: 999,
+              border: "1px solid rgba(0, 167, 111, 0.32)",
+              background: chip.active ? "#0a3c31" : "#06241d",
+              color: "#d7f6ec",
+              textDecoration: "none",
+              fontSize: 12,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {chip.label}
+          </a>
+        ))}
       </div>
 
       {/* Sort controls */}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
-        {[ 
-          { key: "newest", label: "Newest" },
-          { key: "rating", label: "Rating" },
-          { key: "students", label: "Students" },
-          { key: "price", label: "Price" },
-        ].map((s) => {
-          const sp = new URLSearchParams();
-          if (searchParams.q) sp.set("q", searchParams.q);
-          if (searchParams.category) sp.set("category", searchParams.category);
-          if (searchParams.provider) sp.set("provider", searchParams.provider);
-          if (searchParams.freeOnly) sp.set("freeOnly", searchParams.freeOnly);
-          sp.set("sort", s.key);
+        {sortOptions.map((option) => {
+          const params = makeParams({ provider: searchParams.provider, freeOnly: searchParams.freeOnly, sort: option.key });
+          const isActive = (searchParams.sort ?? "newest") === option.key;
           return (
             <a
-              key={s.key}
-              href={`/?${sp.toString()}`}
+              key={option.key}
+              href={`/?${params.toString()}`}
               style={{
                 padding: "6px 10px",
                 borderRadius: 8,
-                border: "1px solid #1f2330",
-                background: (searchParams.sort ?? "newest") === s.key ? "#151a28" : "#0f1320",
-                color: "#d7eaff",
+                border: "1px solid rgba(0, 167, 111, 0.32)",
+                background: isActive ? "#0a3c31" : "#06241d",
+                color: "#d7f6ec",
                 textDecoration: "none",
                 fontSize: 12,
               }}
             >
-              {s.label}
+              {option.label}
             </a>
           );
         })}
@@ -349,13 +353,19 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
                 key={c.slug}
                 href={`/?${sp.toString()}`}
                 className="card"
-                style={{ textDecoration: "none", color: "#eaf4ff" }}
+                style={{ textDecoration: "none", color: "#d7f6ec" }}
                 title={`${c.name} coupons & free courses`}
               >
                 <div className="card-body" style={{ display: "grid", gap: 8 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={c.icon} alt="" width={18} height={18} style={{ filter: "brightness(1.2)" }} />
+                    <img
+                      src={c.icon}
+                      alt=""
+                      width={18}
+                      height={18}
+                      style={{ filter: "hue-rotate(150deg) brightness(1.05)" }}
+                    />
                     <div style={{ fontWeight: 700 }}>{c.name}</div>
                   </div>
                   <div className="muted" style={{ fontSize: 12 }}>{c.count} deals</div>
@@ -370,7 +380,7 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
       <section style={{ marginTop: 24 }}>
         <h2 style={{ fontSize: 18, marginBottom: 8 }}>About these Udemy coupons</h2>
         <p className="muted" style={{ marginTop: 0 }}>
-          Explore the best 100% Off and Free Udemy Coupons handpicked for learners. We regularly refresh discounts so you can enroll in top Udemy courses without breaking the bank.
+          Explore the best Udemy coupons handpicked for learners. Courseswyn regularly refreshes discount codes and free course links so you can enroll in top Udemy classes without breaking the bank.
         </p>
       </section>
     </div>

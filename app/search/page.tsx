@@ -1,21 +1,24 @@
 import type { Metadata } from "next";
 import SearchClient from "./SearchClient";
 
-const PRIMARY_KEYWORD = "Udemy courses";
+const PRIMARY_KEYWORD = "Udemy Coupons";
 
 export const metadata: Metadata = {
-  title: `${PRIMARY_KEYWORD} Deals & Coupons | Coursespeak`,
-  description: "Discover the latest Udemy courses coupons and discounts curated by Coursespeak.",
+  title: `${PRIMARY_KEYWORD} & Discounts | Courseswyn`,
+  description: "Explore up-to-date Udemy coupon codes, promo links, and exclusive discounts curated by Courseswyn.",
   keywords: [
-    "Udemy courses",
     "Udemy coupons",
+    "Udemy coupon codes",
+    "Udemy promo codes",
     "Udemy discounts",
-    "online course deals",
-    "elearning promotions",
+    "Udemy deals",
+    "free Udemy courses",
+    "online learning discounts",
+    "Udemy promotional offers",
   ],
   openGraph: {
-    title: `${PRIMARY_KEYWORD} Deals & Coupons | Coursespeak`,
-    description: "A curated list of Udemy courses deals, coupons, and limited-time discounts to boost your skills.",
+    title: `${PRIMARY_KEYWORD} & Discounts | Courseswyn`,
+    description: "A curated list of Udemy coupon codes, limited-time discounts, and free course offers from Courseswyn.",
     type: "website",
     url: "/search",
   },

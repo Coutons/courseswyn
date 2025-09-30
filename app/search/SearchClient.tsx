@@ -1,66 +1,83 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import DealCard from "@/components/DealCard";
-import type { Deal } from "@/types/deal";
+import DealsList from "@/components/DealsList";
 
-const PRIMARY_KEYWORD = "Udemy courses";
+type Deal = {
+  id: string | number;
+};
+
+type DealsResponse = {
+  items?: Deal[];
+  page?: number;
+  totalPages?: number;
+};
+
+function readSearchParams(): Record<string, string> {
+  if (typeof window === "undefined") return {};
+  const params = new URLSearchParams(window.location.search);
+  const entries: Record<string, string> = {};
+  params.forEach((value, key) => {
+    entries[key] = value;
+  });
+  return entries;
+}
 
 export default function SearchClient() {
-  const [q, setQ] = useState("");
-  const [deals, setDeals] = useState<Deal[]>([]);
+  const [items, setItems] = useState<Deal[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
+
+  const baseParams = useMemo(() => {
+    const params = readSearchParams();
+    if (!params.pageSize) params.pageSize = "12";
+    return params;
+  }, [typeof window === "undefined" ? undefined : window.location.search]);
 
   useEffect(() => {
-    fetch("/api/deals?page=1&pageSize=100")
-      .then((response) => response.json())
-      .then((data) => setDeals(data.items ?? []))
-      .catch(() => setDeals([]));
-  }, []);
+    let cancelled = false;
 
-  const filtered = useMemo(() => {
-    const term = q.trim().toLowerCase();
-    if (!term) return deals;
-    return deals.filter((deal) => {
-      const title = deal.title.toLowerCase();
-      const provider = deal.provider.toLowerCase();
-      const category = (deal.category ?? "").toLowerCase();
-      const slug = (deal.slug ?? "").toLowerCase();
-      return (
-        title.includes(term) ||
-        provider.includes(term) ||
-        category.includes(term) ||
-        slug.includes(term)
-      );
-    });
-  }, [q, deals]);
+    async function load() {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams(baseParams);
+        params.set("page", "1");
+        const res = await fetch(`/api/deals?${params.toString()}`, { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to load deals");
+        const data: DealsResponse = await res.json();
+        if (cancelled) return;
+        setItems(data.items ?? []);
+        setPage(data.page ?? 1);
+        setTotalPages(data.totalPages ?? 1);
+      } catch (error) {
+        if (!cancelled) {
+          console.error(error);
+          setItems([]);
+          setPage(1);
+          setTotalPages(1);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [baseParams]);
+
+  if (loading) {
+    return <div style={{ padding: 16 }}>Loading deals…</div>;
+  }
 
   return (
-    <div>
-      <h1 style={{ marginBottom: 12 }}>Explore {PRIMARY_KEYWORD} Deals</h1>
-      <p className="muted" style={{ marginBottom: 18 }}>
-        Discover the best {PRIMARY_KEYWORD} complete with coupons, discounts, and fresh promos to
-        accelerate your online learning journey.
-      </p>
-      <input
-        value={q}
-        onChange={(event) => setQ(event.target.value)}
-        placeholder="Search Udemy courses, coupon codes, or specific categories..."
-        style={{
-          width: "100%",
-          padding: 10,
-          borderRadius: 8,
-          border: "1px solid #1f2330",
-          background: "#0f1320",
-          color: "#e6e9f2",
-          marginBottom: 16,
-        }}
-        aria-label="Search Udemy courses"
-      />
-      <div className="grid">
-        {filtered.map((deal) => (
-          <DealCard key={deal.id} deal={deal} />
-        ))}
-      </div>
-    </div>
+    <DealsList
+      initialItems={items}
+      initialPage={page}
+      totalPages={totalPages}
+      baseParams={baseParams}
+    />
   );
 }
