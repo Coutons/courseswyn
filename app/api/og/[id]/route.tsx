@@ -98,7 +98,7 @@ export async function GET(
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 28 }}>
           <div>{subtitle}</div>
-          <div style={{ fontWeight: 600 }}>coursespeak.com</div>
+          <div style={{ fontWeight: 600 }}>courseswyn.com</div>
         </div>
       </div>
     ),
