@@ -3,13 +3,13 @@
 set -euo pipefail
 
 # Konfigurasi default (bisa dioverride lewat environment variable)
-CONTAINER_NAME="${SUPABASE_DB_CONTAINER:-supabase-db}"
+CONTAINER_NAME="${SUPABASE_DB_CONTAINER:-supabase_db_coursespeak}"
 DB_USER="${SUPABASE_DB_USER:-postgres}"
 DB_NAME="${SUPABASE_DB_NAME:-postgres}"
 BACKUP_DIR="${SUPABASE_BACKUP_DIR:-/srv/backups}"
 RETENTION_DAYS="${SUPABASE_BACKUP_RETENTION_DAYS:-14}"
 TIMESTAMP="$(date +%F_%H-%M-%S)"
-BACKUP_FILE="${BACKUP_DIR}/coursespeak-${TIMESTAMP}.sql"
+BACKUP_FILE="${BACKUP_DIR}/courseswyn-${TIMESTAMP}.sql"
 
 mkdir -p "${BACKUP_DIR}"
 
@@ -29,7 +29,7 @@ fi
 
 if [[ -n "${RETENTION_DAYS}" ]]; then
   echo "[INFO] Menghapus backup yang lebih lama dari ${RETENTION_DAYS} hari"
-  find "${BACKUP_DIR}" -type f -name 'coursespeak-*.sql*' -mtime "+${RETENTION_DAYS}" -delete || true
+  find "${BACKUP_DIR}" -type f -name 'courseswyn-*.sql*' -mtime "+${RETENTION_DAYS}" -delete || true
 fi
 
 if [[ -n "${SUPABASE_RCLONE_REMOTE:-}" ]]; then
