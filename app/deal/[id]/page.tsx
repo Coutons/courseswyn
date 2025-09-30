@@ -280,7 +280,7 @@ export default async function DealDetail({ params }: { params: { id: string } })
 
           {related.length > 0 && (
             <section style={{ marginTop: 24 }}>
-              <h3>Related posts</h3>
+              <h3>Related Deals</h3>
               <RelatedList
                 items={related.map((r) => {
                   const key = String(r.slug || r.id);
@@ -376,6 +376,6 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       },
     };
   } catch {
-    return { title: "Deal Not Found | Coursespeak" };
+    return { title: "Deal Not Found | Courseswyn" };
   }
 }
