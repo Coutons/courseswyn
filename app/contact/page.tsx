@@ -92,7 +92,18 @@ export default function ContactPage() {
           overflow: "hidden",
         }}
       >
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc56e-OCJ4PdhgXCzk-kTfuv_PhOTvo6IsHNBUA5DsoJ_7Feg/viewform?embedded=true" width="640" height="913" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+        <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSc56e-OCJ4PdhgXCzk-kTfuv_PhOTvo6IsHNBUA5DsoJ_7Feg/viewform?embedded=true"
+          width="100%"
+          height={820}
+          style={{ border: 0 }}
+          frameBorder="0"
+          marginHeight={0}
+          marginWidth={0}
+          title="Courseswyn Contact Form"
+        >
+          Loading…
+        </iframe>
       </div>
 
       <aside style={{ display: "grid", gap: 12 }}>
