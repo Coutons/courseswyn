@@ -6,11 +6,11 @@ import path from "path";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "All Categories & Subcategories | Coursespeak",
-  description: "Browse all primary categories and subcategories of Udemy deals and free coupons on Coursespeak.",
+  title: "All Categories & Subcategories | Courseswyn",
+  description: "Browse all primary categories and subcategories of Udemy deals and free coupons on Courseswyn.",
   alternates: { canonical: "/categories" },
   openGraph: {
-    title: "All Categories & Subcategories | Coursespeak",
+    title: "All Categories & Subcategories | Courseswyn",
     description: "Explore all categories and subcategories of Udemy deals and free Udemy coupons.",
     url: "/categories",
     type: "website",
@@ -97,7 +97,7 @@ export default async function CategoriesPage() {
       >
         <h1 style={{ marginBottom: 6 }}>All Categories & Subcategories</h1>
         <p className="muted" style={{ marginTop: 0 }}>
-          Explore every primary category and subcategory available on Coursespeak. Click a category or subcategory to view the latest deals and free Udemy coupons.
+          Explore every primary category and subcategory available on Courseswyn. Click a category or subcategory to view the latest deals and free Udemy coupons.
         </p>
       </section>
 
