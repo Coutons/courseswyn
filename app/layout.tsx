@@ -3,9 +3,9 @@ import React from "react";
 import Script from "next/script";
 
 export const metadata = {
-  title: "Coursespeak Deals",
+  title: "Courseswyn",
   description: "Find the best course deals and coupons",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://coursespeak.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://courseswyn.com"),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -80,9 +80,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              name: "Coursespeak",
-              url: typeof window !== 'undefined' ? window.location.origin : 'https://coursespeak.com',
-              logo: typeof window !== 'undefined' ? `${window.location.origin}/logo.svg` : 'https://coursespeak.com/logo.svg',
+              name: "Courseswyn",
+              url: typeof window !== 'undefined' ? window.location.origin : 'https://courseswyn.com',
+              logo: typeof window !== 'undefined' ? `${window.location.origin}/logo.svg` : 'https://courseswyn.com/logo.svg',
             }),
           }}
         />
@@ -93,12 +93,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "Coursespeak",
-              url: typeof window !== 'undefined' ? window.location.origin : 'https://coursespeak.com',
+              url: typeof window !== 'undefined' ? window.location.origin : 'https://courseswyn.com',
               potentialAction: {
                 "@type": "SearchAction",
                 target: typeof window !== 'undefined' 
                   ? `${window.location.origin}/search?q={search_term_string}`
-                  : 'https://coursespeak.com/search?q={search_term_string}',
+                  : 'https://courseswyn.com/search?q={search_term_string}',
                 "query-input": "required name=search_term_string",
               },
             }),
