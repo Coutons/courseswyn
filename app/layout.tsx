@@ -3,8 +3,13 @@ import React from "react";
 import Script from "next/script";
 
 export const metadata = {
+<<<<<<< HEAD
   title: "Courseswyn",
   description: "Find the best course deals and coupons",
+=======
+  title: "Courseswyn Deals",
+  description: "Daily updated Udemy coupons, 100% off course deals, and free learning resources curated by Courseswyn.",
+>>>>>>> 4954ec50 (Update Courseswyn branding with CRW icon)
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://courseswyn.com"),
 };
 
@@ -92,7 +97,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
+<<<<<<< HEAD
               name: "Coursespeak",
+=======
+              name: "Courseswyn",
+>>>>>>> 4954ec50 (Update Courseswyn branding with CRW icon)
               url: typeof window !== 'undefined' ? window.location.origin : 'https://courseswyn.com',
               potentialAction: {
                 "@type": "SearchAction",
@@ -107,25 +116,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="site-header">
           <div className="container">
             <h1 style={{ margin: 0, lineHeight: 0 }}>
-              <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none" }} aria-label="Coursespeak Home">
-                {/* Inline SVG logo to avoid asset loading issues */}
-                <svg xmlns="http://www.w3.org/2000/svg" width="176" height="32" viewBox="0 0 220 48" aria-hidden>
+              <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 0, textDecoration: "none" }} aria-label="Courseswyn Home">
+                {/* Icon-only logo */}
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="32" viewBox="0 0 88 44" aria-hidden>
                   <defs>
-                    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#3b82f6"/>
-                      <stop offset="100%" stop-color="#06b6d4"/>
+                    <linearGradient id="crwGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#35ffb0"/>
+                      <stop offset="100%" stopColor="#00c777"/>
                     </linearGradient>
                   </defs>
-                  <g transform="translate(0,0)">
-                    <rect x="0" y="0" width="220" height="48" rx="10" fill="#0f1320"/>
-                    <g transform="translate(10,8)">
-                      <rect x="0" y="0" width="32" height="32" rx="8" fill="url(#g)"/>
-                      <path d="M9 22c0-4.97 4.03-9 9-9 2.2 0 4.22.78 5.8 2.08l-2.1 2.1A6.5 6.5 0 0 0 18 15.5c-3.04 0-5.5 2.46-5.5 5.5s2.46 5.5 5.5 5.5a6.5 6.5 0 0 0 6.08-4.7l2.36.69A9 9 0 0 1 18 31c-4.97 0-9-4.03-9-9z" fill="#0b0d12" opacity=".9"/>
-                    </g>
-                    <g>
-                      <text x="52" y="30" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#eaf4ff">Coursespeak</text>
-                      <text x="52" y="42" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="10" fill="#9db7ff">Deals & Coupons</text>
-                    </g>
+                  <rect x="0" y="0" width="88" height="44" rx="14" fill="#061016"/>
+                  <g transform="translate(12,10)" fill="none" stroke="url(#crwGradient)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 2H10C6 2 4 4 4 8v16c0 4 2 6 6 6h8"/>
+                    <path d="M34 2v22M34 2h10c6 0 8 2.4 8 7.2 0 4.8-2 7.2-8 7.2H34l14 13.6"/>
+                    <path d="M56 2l5.4 24L66 13l4.6 13L76 2"/>
                   </g>
                 </svg>
               </a>
@@ -183,7 +187,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         <main className="container">{children}</main>
         <footer className="site-footer">
-          <div className="container">© {new Date().getFullYear()} Coursespeak</div>
+          <div className="container">© {new Date().getFullYear()} Courseswyn</div>
         </footer>
       </body>
     </html>
