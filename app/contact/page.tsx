@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Contact | Coursespeak",
+  title: "Contact | Courseswyn",
   description: "Send us a message with your questions, feedback, or partnership requests.",
   alternates: { canonical: "/contact" },
   openGraph: {
-    title: "Contact | Coursespeak",
-    description: "Get in touch with the Coursespeak team.",
+    title: "Contact | Courseswyn",
+    description: "Get in touch with the Courseswyn team.",
     url: "/contact",
     type: "website",
   },
@@ -77,7 +77,7 @@ export default function ContactPage() {
       }}
     >
       <header style={{ display: "grid", gap: 12 }}>
-        <h1 style={{ margin: 0 }}>Contact Coursespeak</h1>
+        <h1 style={{ margin: 0 }}>Contact Courseswyn</h1>
         <p className="muted" style={{ margin: 0 }}>
           Have questions, feedback, or partnership opportunities? Fill out the form below and we’ll get back to you within 1–2 business days.
         </p>
