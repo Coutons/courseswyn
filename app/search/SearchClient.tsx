@@ -13,9 +13,10 @@ type DealsResponse = {
   totalPages?: number;
 };
 
-function readSearchParams(): Record<string, string> {
-  if (typeof window === "undefined") return {};
-  const params = new URLSearchParams(window.location.search);
+function readSearchParams(search?: string): Record<string, string> {
+  const source = typeof search === "string" ? search : typeof window === "undefined" ? "" : window.location.search;
+  if (!source) return {};
+  const params = new URLSearchParams(source);
   const entries: Record<string, string> = {};
   params.forEach((value, key) => {
     entries[key] = value;
@@ -29,11 +30,13 @@ export default function SearchClient() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
+  const locationSearch = typeof window !== "undefined" ? window.location.search : "";
+
   const baseParams = useMemo(() => {
-    const params = readSearchParams();
+    const params = readSearchParams(locationSearch);
     if (!params.pageSize) params.pageSize = "12";
     return params;
-  }, [typeof window === "undefined" ? undefined : window.location.search]);
+  }, [locationSearch]);
 
   useEffect(() => {
     let cancelled = false;
