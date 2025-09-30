@@ -1,10 +1,10 @@
-# coursespeak
+# courseswyn
 
-Coursespeak is a Next.js app for discovering the latest course deals and coupons.
+Courseswyn is a Next.js app for discovering the latest course deals and coupons.
 
 ## Scripts
 
-- dev: Start the dev server at http://localhost:3002
+- dev: Start the dev server at https://courseswyn.com
 - build: Production build
 - start: Run the production server
 - lint: Lint the project
