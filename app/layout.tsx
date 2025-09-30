@@ -3,13 +3,8 @@ import React from "react";
 import Script from "next/script";
 
 export const metadata = {
-<<<<<<< HEAD
-  title: "Courseswyn",
-  description: "Find the best course deals and coupons",
-=======
   title: "Courseswyn Deals",
   description: "Daily updated Udemy coupons, 100% off course deals, and free learning resources curated by Courseswyn.",
->>>>>>> 4954ec50 (Update Courseswyn branding with CRW icon)
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://courseswyn.com"),
 };
 
@@ -45,8 +40,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           strategy="afterInteractive"
         />
         {/* Impact STAT Tag */}
-        <Script 
-          id="impact-stat-tag" 
+        <Script
+          id="impact-stat-tag"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
@@ -62,10 +57,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 g.parentNode.insertBefore(f,g);
               })('//d.impactradius-event.com/A6564357-35a5-419d-9b2e-28c3c7b15ac311.js','script','impactStat',document,window);
               
-              // Initialize Impact tracking
               if (typeof impactStat === 'function') {
                 try {
-                  // Transform links and track impressions
                   impactStat('transformLinks');
                   impactStat('trackImpression');
                   console.log('Impact STAT tag initialized successfully');
@@ -75,7 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               } else {
                 console.error('impactStat function not found');
               }
-            `
+            `,
           }}
         />
         {/* Organization & WebSite JSON-LD for SEO */}
@@ -86,8 +79,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "Courseswyn",
-              url: typeof window !== 'undefined' ? window.location.origin : 'https://courseswyn.com',
-              logo: typeof window !== 'undefined' ? `${window.location.origin}/logo.svg` : 'https://courseswyn.com/logo.svg',
+              url: typeof window !== "undefined" ? window.location.origin : "https://courseswyn.com",
+              logo: typeof window !== "undefined" ? `${window.location.origin}/logo.svg` : "https://courseswyn.com/logo.svg",
             }),
           }}
         />
@@ -97,17 +90,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-<<<<<<< HEAD
-              name: "Coursespeak",
-=======
               name: "Courseswyn",
->>>>>>> 4954ec50 (Update Courseswyn branding with CRW icon)
-              url: typeof window !== 'undefined' ? window.location.origin : 'https://courseswyn.com',
+              url: typeof window !== "undefined" ? window.location.origin : "https://courseswyn.com",
               potentialAction: {
                 "@type": "SearchAction",
-                target: typeof window !== 'undefined' 
-                  ? `${window.location.origin}/search?q={search_term_string}`
-                  : 'https://courseswyn.com/search?q={search_term_string}',
+                target:
+                  typeof window !== "undefined"
+                    ? `${window.location.origin}/search?q={search_term_string}`
+                    : "https://courseswyn.com/search?q={search_term_string}",
                 "query-input": "required name=search_term_string",
               },
             }),
@@ -116,20 +106,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="site-header">
           <div className="container">
             <h1 style={{ margin: 0, lineHeight: 0 }}>
-              <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 0, textDecoration: "none" }} aria-label="Courseswyn Home">
-                {/* Icon-only logo */}
+              <a
+                href="/"
+                style={{ display: "inline-flex", alignItems: "center", gap: 0, textDecoration: "none" }}
+                aria-label="Courseswyn Home"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="32" viewBox="0 0 88 44" aria-hidden>
                   <defs>
                     <linearGradient id="crwGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#35ffb0"/>
-                      <stop offset="100%" stopColor="#00c777"/>
+                      <stop offset="0%" stopColor="#35ffb0" />
+                      <stop offset="100%" stopColor="#00c777" />
                     </linearGradient>
                   </defs>
-                  <rect x="0" y="0" width="88" height="44" rx="14" fill="#061016"/>
-                  <g transform="translate(12,10)" fill="none" stroke="url(#crwGradient)" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 2H10C6 2 4 4 4 8v16c0 4 2 6 6 6h8"/>
-                    <path d="M34 2v22M34 2h10c6 0 8 2.4 8 7.2 0 4.8-2 7.2-8 7.2H34l14 13.6"/>
-                    <path d="M56 2l5.4 24L66 13l4.6 13L76 2"/>
+                  <rect x="0" y="0" width="88" height="44" rx="14" fill="#061016" />
+                  <g
+                    transform="translate(12,10)"
+                    fill="none"
+                    stroke="url(#crwGradient)"
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M18 2H10C6 2 4 4 4 8v16c0 4 2 6 6 6h8" />
+                    <path d="M34 2v22M34 2h10c6 0 8 2.4 8 7.2 0 4.8-2 7.2-8 7.2H34l14 13.6" />
+                    <path d="M56 2l5.4 24L66 13l4.6 13L76 2" />
                   </g>
                 </svg>
               </a>
@@ -155,11 +155,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="/contact" className="nav-link">
                 Contact
               </a>
-              <form
-                action="/search"
-                method="get"
-                style={{ display: "flex", alignItems: "center", gap: 8 }}
-              >
+              <form action="/search" method="get" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <input
                   type="search"
                   name="q"
