@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { readDeals } from "@/lib/store";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = (process.env.NEXT_PUBLIC_SITE_URL || "https://coursespeak.com").replace(/\/$/, "");
+  const base = (process.env.NEXT_PUBLIC_SITE_URL || "https://courseswyn.com").replace(/\/$/, "");
 
   const routes: MetadataRoute.Sitemap = [
     { url: `${base}/`, lastModified: new Date() },
