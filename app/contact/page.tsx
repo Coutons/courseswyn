@@ -92,36 +92,25 @@ export default function ContactPage() {
           overflow: "hidden",
         }}
       >
-        <iframe
-          src="https://docs.google.com/forms/d/e/1FAIpQLSctXPxQ9aXJa69FOJVgssa-V5niY1LeE_aDqVmbgukaysRKsQ/viewform?embedded=true"
-          width="100%"
-          height="820"
-          style={{ border: 0 }}
-          frameBorder="0"
-          marginHeight={0}
-          marginWidth={0}
-          title="Coursespeak Contact Form"
-        >
-          Loading…
-        </iframe>
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc56e-OCJ4PdhgXCzk-kTfuv_PhOTvo6IsHNBUA5DsoJ_7Feg/viewform?embedded=true" width="640" height="913" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
       </div>
 
       <aside style={{ display: "grid", gap: 12 }}>
         <h2 style={{ margin: 0, fontSize: 20 }}>Prefer direct contact?</h2>
         <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 8 }}>
           <li>
-            <a href="mailto:contact@coursespeak.com" style={{ color: "#3b82f6" }}>
-              contact@coursespeak.com
+            <a href="mailto:hello@courseswyn.com" style={{ color: "#35ffb0" }}>
+              hello@courseswyn.com
             </a>
           </li>
           <li>
-            <a href="https://x.com/courses_peak" target="_blank" rel="noreferrer" style={{ color: "#3b82f6" }}>
-              Twitter / X
+            <a href="https://x.com/CoursesGift" target="_blank" rel="noreferrer" style={{ color: "#35ffb0" }}>
+              Follow us on X (Twitter)
             </a>
           </li>
           <li>
-            <a href="https://www.facebook.com/coursespeak24" target="_blank" rel="noreferrer" style={{ color: "#3b82f6" }}>
-              Join our facebook community
+            <a href="https://www.facebook.com/BestCouponPromo" target="_blank" rel="noreferrer" style={{ color: "#35ffb0" }}>
+              Join our Facebook community
             </a>
           </li>
         </ul>
