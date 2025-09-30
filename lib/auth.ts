@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 
-export const ADMIN_COOKIE_NAME = "coursespeak_admin_session";
+export const ADMIN_COOKIE_NAME = "courseswyn_admin_session";
 
 function sanitizeToken(token: string | undefined | null): string | null {
   const trimmed = token?.trim();
