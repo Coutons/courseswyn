@@ -31,14 +31,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `,
           }}
         />
-        {/* Google AdSense Auto Ads */}
-        <Script
-          id="adsense-auto"
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8220442576502761"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
         {/* Impact STAT Tag */}
         <Script
           id="impact-stat-tag"
@@ -147,6 +139,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </a>
               <a href="/categories" className="nav-link">
                 Categories
+              </a>
+              <a href="/udemy-coupons" className="nav-link">
+                Udemy Coupons
               </a>
               <a href="/search" className="nav-link">
                 Courses
