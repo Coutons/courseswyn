@@ -75,12 +75,31 @@ export default function SearchClient() {
     return <div style={{ padding: 16 }}>Loading deals…</div>;
   }
 
+  const hasResults = (items?.length ?? 0) > 0;
+
   return (
-    <DealsList
-      initialItems={items}
-      initialPage={page}
-      totalPages={totalPages}
-      baseParams={baseParams}
-    />
+    <div style={{ display: "grid", gap: 16 }}>
+      {!hasResults && (
+        <div className="card" style={{ padding: 0 }}>
+          <div className="card-body" style={{ display: "grid", gap: 12 }}>
+            <h2 style={{ margin: 0 }}>No coupons found for this search</h2>
+            <p className="muted" style={{ margin: 0 }}>
+              Try broadening your keywords, removing filters, or explore these quick links to get back on track.
+            </p>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <a href="/udemy-coupons" className="pill">Udemy coupons hub</a>
+              <a href="/?provider=udemy&freeOnly=1" className="pill">100% off coupons</a>
+              <a href="/categories" className="pill">Browse categories</a>
+            </div>
+          </div>
+        </div>
+      )}
+      <DealsList
+        initialItems={items}
+        initialPage={page}
+        totalPages={totalPages}
+        baseParams={baseParams}
+      />
+    </div>
   );
 }

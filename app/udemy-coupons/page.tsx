@@ -145,21 +145,23 @@ export default async function UdemyCouponsPage() {
             codes, and curated recommendations for trending Udemy classes on sale.
           </p>
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: 13 }}>
-            <span className="pill" style={{ background: '#0a3c31', color: '#d7f6ec' }}>
+            <span className="pill" style={{ background: '#15202d', color: '#9fcfd0' }}>
               {total} curated Udemy deals
             </span>
             <span className="pill" style={{ background: '#15202d', color: '#9fcfd0' }}>
               Auto-refreshed multiple times per day
             </span>
-            <span className="pill" style={{ background: '#19333c', color: '#bbe9e0' }}>
-              Filter for 100% off codes & free courses
-            </span>
+            <div className="muted" style={{ fontSize: 14 }}>
+              <strong style={{ color: '#66f2c2' }}>How to redeem coupons faster:</strong>
+              <span> Subscribe for instant alerts whenever we post a fresh Udemy coupon.</span>
+              {' '}Read our <a href="/post/how-to-redeem-udemy-coupons" style={{ color: 'var(--brand)', fontWeight: 600 }}>redemption guide</a> for step-by-step tips.
+            </div>
           </div>
         </div>
       </section>
 
       <section className="card" style={{ borderRadius: 14 }}>
-        <div className="card-body" style={{ display: 'grid', gap: 16 }}>
+        <div className="card-body" style={{ display: 'grid', gap: 12 }}>
           <h2 style={{ margin: 0 }}>Latest Udemy Coupons</h2>
           <p className="muted" style={{ margin: 0 }}>
             Use the filters to surface 100% off coupons only, or click Show more to browse the full archive. Each card

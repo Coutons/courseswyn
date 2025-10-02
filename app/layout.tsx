@@ -1,11 +1,16 @@
 import "../styles/globals.css";
 import React from "react";
 import Script from "next/script";
+import dynamicImport from "next/dynamic";
+
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://courseswyn.com").replace(/\/$/, "");
+
+const NewsletterSignupCard = dynamicImport(() => import("@/app/newsletter/SignupCard"), { ssr: false });
 
 export const metadata = {
   title: "Courseswyn Deals",
   description: "Daily updated Udemy coupons, 100% off course deals, and free learning resources curated by Courseswyn.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://courseswyn.com"),
+  metadataBase: new URL(SITE_URL),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -71,8 +76,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "Courseswyn",
-              url: typeof window !== "undefined" ? window.location.origin : "https://courseswyn.com",
-              logo: typeof window !== "undefined" ? `${window.location.origin}/logo.svg` : "https://courseswyn.com/logo.svg",
+              url: SITE_URL,
+              logo: `${SITE_URL}/logo.svg`,
             }),
           }}
         />
@@ -83,13 +88,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "Courseswyn",
-              url: typeof window !== "undefined" ? window.location.origin : "https://courseswyn.com",
+              url: SITE_URL,
               potentialAction: {
                 "@type": "SearchAction",
-                target:
-                  typeof window !== "undefined"
-                    ? `${window.location.origin}/search?q={search_term_string}`
-                    : "https://courseswyn.com/search?q={search_term_string}",
+                target: `${SITE_URL}/search?q={search_term_string}`,
                 "query-input": "required name=search_term_string",
               },
             }),
@@ -158,7 +160,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   style={{
                     padding: "6px 10px",
                     borderRadius: 999,
-                    border: "1px solid #1f2330",
+                    border: "1px solid rgba(20, 184, 166, 0.24)",
                     background: "#0f1320",
                     color: "#e6e9f2",
                     minWidth: 180,
@@ -177,7 +179,41 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         <main className="container">{children}</main>
         <footer className="site-footer">
-          <div className="container">© {new Date().getFullYear()} Courseswyn</div>
+          <div className="container" style={{ display: "grid", gap: 16 }}>
+            <div style={{ display: "grid", gap: 12 }}>
+              <strong style={{ fontSize: 16 }}>Stay ahead of new Udemy coupons</strong>
+              <NewsletterSignupCard />
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
+              <div style={{ minWidth: 160 }}>
+                <strong style={{ display: "block", marginBottom: 8 }}>Explore</strong>
+                <div style={{ display: "grid", gap: 6 }}>
+                  <a href="/udemy-coupons" className="footer-link">Udemy coupons</a>
+                  <a href="/?provider=udemy&freeOnly=1" className="footer-link">Free Udemy courses</a>
+                  <a href="/categories" className="footer-link">Browse categories</a>
+                  <a href="/search" className="footer-link">Advanced search</a>
+                </div>
+              </div>
+              <div style={{ minWidth: 160 }}>
+                <strong style={{ display: "block", marginBottom: 8 }}>Popular topics</strong>
+                <div style={{ display: "grid", gap: 6 }}>
+                  <a href="/?provider=udemy&category=development" className="footer-link">Web development coupons</a>
+                  <a href="/?provider=udemy&category=it-and-software" className="footer-link">IT & software coupons</a>
+                  <a href="/?provider=udemy&category=design" className="footer-link">Design coupons</a>
+                  <a href="/post/udemy-coupons-guide" className="footer-link">Udemy coupon guide</a>
+                </div>
+              </div>
+              <div style={{ minWidth: 160 }}>
+                <strong style={{ display: "block", marginBottom: 8 }}>Company</strong>
+                <div style={{ display: "grid", gap: 6 }}>
+                  <a href="/contact" className="footer-link">Contact form</a>
+                  <a href="mailto:hello@courseswyn.com" className="footer-link">Email us: hello@courseswyn.com</a>
+                  <a href="/sitemap" className="footer-link">HTML sitemap (coming soon)</a>
+                </div>
+              </div>
+            </div>
+            <div style={{ fontSize: 12, color: "#7f93a9" }}>© {new Date().getFullYear()} Courseswyn. All rights reserved.</div>
+          </div>
         </footer>
       </body>
     </html>

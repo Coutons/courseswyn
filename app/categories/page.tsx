@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { readDeals } from "@/lib/store";
 import { promises as fs } from "fs";
 import path from "path";
+import dynamicImport from "next/dynamic";
+
+const NewsletterSignupCard = dynamicImport(() => import("@/app/newsletter/SignupCard"), { ssr: false });
 
 export const dynamic = "force-dynamic";
 
@@ -59,16 +62,15 @@ export default async function CategoriesPage() {
     } catch {}
     return { ...c, icon };
   }));
-
   if (list.length === 0) {
     return (
       <div>
         <section
           style={{
             padding: 16,
-            border: "1px solid #1f2330",
-            borderRadius: 12,
-            background: "linear-gradient(135deg, #0f1320 0%, #11182a 50%, #0f1320 100%)",
+            border: "1px solid rgba(20, 184, 166, 0.24)",
+            borderRadius: 16,
+            background: "linear-gradient(135deg, #06212b 0%, #0d2f3c 60%, #051e24 100%)",
             marginBottom: 16,
           }}
         >
@@ -89,17 +91,19 @@ export default async function CategoriesPage() {
       <section
         style={{
           padding: 16,
-          border: "1px solid #1f2330",
-          borderRadius: 12,
-          background: "linear-gradient(135deg, #0f1320 0%, #11182a 50%, #0f1320 100%)",
+          border: "1px solid rgba(20, 184, 166, 0.24)",
+          borderRadius: 16,
+          background: "linear-gradient(135deg, #06212b 0%, #0d2f3c 60%, #051e24 100%)",
           marginBottom: 16,
         }}
       >
-        <h1 style={{ marginBottom: 6 }}>All Categories & Subcategories</h1>
+        <h1 style={{ marginBottom: 8 }}>Browse Udemy coupon categories</h1>
         <p className="muted" style={{ marginTop: 0 }}>
-          Explore every primary category and subcategory available on Courseswyn. Click a category or subcategory to view the latest deals and free Udemy coupons.
+          Explore every primary category and subcategory on Courseswyn. Select a topic to see the newest Udemy coupons, free course codes, and promo updates.
         </p>
       </section>
+
+      <NewsletterSignupCard />
 
       <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
         {list.map((c) => {

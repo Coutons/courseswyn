@@ -14,6 +14,7 @@ export default function LegacyPostRedirect({ params }: Props) {
     "contact-us": "/contact",
     blog: "/deal/blog",
     "udemy-coupons-guide": "/post/udemy-coupons-guide",
+    "how-to-redeem-udemy-coupons": "/post/how-to-redeem-udemy-coupons",
   };
 
   const target = specials[params.slug] || `/deal/${params.slug}`;
