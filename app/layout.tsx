@@ -208,7 +208,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <div style={{ display: "grid", gap: 6 }}>
                   <a href="/contact" className="footer-link">Contact form</a>
                   <a href="mailto:hello@courseswyn.com" className="footer-link">Email us: hello@courseswyn.com</a>
-                  <a href="/sitemap" className="footer-link">HTML sitemap (coming soon)</a>
+                  <a href="/sitemap" className="footer-link">Sitemap</a>
                 </div>
               </div>
             </div>
