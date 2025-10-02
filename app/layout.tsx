@@ -137,7 +137,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <nav
               style={{
                 display: "flex",
-                gap: "1.5rem",
                 alignItems: "center",
                 flex: 1,
                 justifyContent: "flex-end",

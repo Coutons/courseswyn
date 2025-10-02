@@ -2,6 +2,9 @@
 import { getBrand } from "@/lib/brand";
 import { buildDealLink } from "@/lib/links";
 
+const PLACEHOLDER_IMAGE =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0%' stop-color='%23083c3a'/%3E%3Cstop offset='100%' stop-color='%230d1f2d'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='640' height='360' fill='url(%23g)'/%3E%3Ctext x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' fill-opacity='0.4' font-size='42' font-family='Segoe UI, sans-serif'%3ECourseswyn%3C/text%3E%3C/svg%3E";
+
 export default function DealCard({ deal }: { deal: any }) {
   const brand = getBrand(deal.provider);
   const key = String(deal.slug || deal.id || "");
@@ -13,6 +16,8 @@ export default function DealCard({ deal }: { deal: any }) {
   const hasDiscount = op > p && p > 0;
   const discountPct = hasDiscount ? Math.round(100 - (p / op) * 100) : null;
   const title = normalizeTitle(String(deal.title || ""));
+  const imageSrc = deal.image ? String(deal.image) : PLACEHOLDER_IMAGE;
+
   return (
     <article className="card">
       <header className="card-header">
@@ -23,26 +28,25 @@ export default function DealCard({ deal }: { deal: any }) {
         </h3>
       </header>
       <div className="card-body">
-        {deal.image && (
-          <div style={{ marginBottom: 8, position: "relative" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={String(deal.image)}
-              alt={title}
-              loading="lazy"
-              style={{ width: "100%", borderRadius: 8, border: "1px solid #1f2330", display: "block" }}
-              referrerPolicy="no-referrer"
-            />
-            {deal.duration && (
-              <span
-                className="pill"
-                style={{ position: "absolute", top: 8, right: 8, background: "#3b82f6", color: "#0b0d12", fontWeight: 800 }}
-              >
-                {`Duration: ${formatDuration(deal.duration)}`}
-              </span>
-            )}
-          </div>
-        )}
+        <div className="card-image-wrapper">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imageSrc}
+            alt={title}
+            width={640}
+            height={360}
+            loading="lazy"
+            referrerPolicy="no-referrer"
+          />
+          {deal.duration && (
+            <span
+              className="pill"
+              style={{ position: "absolute", top: 8, right: 8, background: "#3b82f6", color: "#0b0d12", fontWeight: 800 }}
+            >
+              {`Duration: ${formatDuration(deal.duration)}`}
+            </span>
+          )}
+        </div>
         <div className="meta" style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
           {deal.category && <span className="provider">{deal.category}</span>}
           {deal.subcategory && <span className="category">{deal.subcategory}</span>}
