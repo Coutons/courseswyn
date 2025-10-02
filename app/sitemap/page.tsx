@@ -6,11 +6,11 @@ import { buildDealLink } from "@/lib/links";
 export const revalidate = 1800;
 
 export const metadata: Metadata = {
-  title: "HTML Sitemap | Courseswyn",
+  title: "Sitemap | Courseswyn",
   description: "Explore the Courseswyn site structure: Udemy coupons, categories, blog guides, and key resources in one place.",
   alternates: { canonical: "/sitemap" },
   openGraph: {
-    title: "HTML Sitemap | Courseswyn",
+    title: "Sitemap | Courseswyn",
     description: "Browse all Courseswyn pages including Udemy coupons, categories, and guides.",
     url: "/sitemap",
   },
@@ -78,7 +78,7 @@ export default async function SitemapPage() {
         }}
       >
         <div className="card-body" style={{ display: "grid", gap: 12 }}>
-          <h1 style={{ margin: 0 }}>Courseswyn HTML sitemap</h1>
+          <h1 style={{ margin: 0 }}>Sitemap</h1>
           <p className="muted" style={{ margin: 0 }}>
             Jump to the most important sections of Courseswyn, including daily Udemy coupons, category pages, search filters, and editorial guides.
           </p>
