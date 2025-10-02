@@ -6,6 +6,8 @@ import ActionsPanel from "@/components/ActionsPanel";
 import RelatedList from "@/components/RelatedList";
 import { buildDealLink } from "@/lib/links";
 
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://courseswyn.com").replace(/\/$/, "");
+
 async function getDeal(id: string): Promise<Deal> {
   const deal = (await getDealById(id)) ?? (await findBySlug(id));
   if (!deal) throw new Error("Deal not found");
@@ -138,6 +140,7 @@ export default async function DealDetail({ params }: { params: { id: string } })
                   reviewCount: Math.max(1, Math.floor((d.students ?? 0) / 10)),
                 }
               : undefined,
+            url: `${SITE_URL}/deal/${d.slug || d.id}`,
           }),
         }}
       />
@@ -153,21 +156,21 @@ export default async function DealDetail({ params }: { params: { id: string } })
                 "@type": "ListItem",
                 position: 1,
                 name: "Home",
-                item: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/`,
+                item: SITE_URL,
               },
               d.category
                 ? {
                     "@type": "ListItem",
                     position: 2,
                     name: d.category,
-                    item: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/?category=${encodeURIComponent(String(d.category).toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""))}`,
+                    item: `${SITE_URL}/?category=${encodeURIComponent(String(d.category).toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""))}`,
                   }
                 : undefined,
               {
                 "@type": "ListItem",
                 position: d.category ? 3 : 2,
                 name: normalizeTitle(d.title),
-                item: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/deal/${d.slug || d.id}`,
+                item: `${SITE_URL}/deal/${d.slug || d.id}`,
               },
             ].filter(Boolean),
           }),

@@ -20,6 +20,8 @@ export const metadata: Metadata = {
 
 export const revalidate = 1800;
 
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://courseswyn.com").replace(/\/$/, "");
+
 const FAQ_ENTRIES = [
   {
     question: "How can I find 100% off Udemy coupons?",
@@ -60,9 +62,30 @@ function buildItemListJson(deals: any[]) {
     itemListElement: deals.slice(0, 12).map((deal: any, index: number) => ({
       '@type': 'ListItem',
       position: index + 1,
-      url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://courseswyn.com'}/deal/${deal.slug || deal.id}`,
+      url: `${SITE_URL}/deal/${deal.slug || deal.id}`,
       name: String(deal.title || ''),
     })),
+  };
+}
+
+function buildBreadcrumbJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: SITE_URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Udemy Coupons',
+        item: `${SITE_URL}/udemy-coupons`,
+      },
+    ],
   };
 }
 
@@ -103,6 +126,7 @@ export default async function UdemyCouponsPage() {
 
   const faqJsonLd = buildFaqJsonLd();
   const itemListJson = buildItemListJson(sorted);
+  const breadcrumbJson = buildBreadcrumbJsonLd();
 
   return (
     <div style={{ display: 'grid', gap: 24 }}>
@@ -178,6 +202,7 @@ export default async function UdemyCouponsPage() {
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJson) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJson) }} />
     </div>
   );
 }

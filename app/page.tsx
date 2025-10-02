@@ -8,6 +8,11 @@ import { slugifyCategory } from "@/lib/slug";
 import { buildDealLink } from "@/lib/links";
 import { promises as fs } from "fs";
 import path from "path";
+import dynamicImport from "next/dynamic";
+
+const NewsletterSignupCard = dynamicImport(() => import("@/app/newsletter/SignupCard"), { ssr: false });
+
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://courseswyn.com").replace(/\/$/, "");
 
 export const metadata: Metadata = {
   title: "Udemy Coupons & 100% Off Deals | Courseswyn",
@@ -177,7 +182,7 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
     itemListElement: (items || []).slice(0, 12).map((d: any, idx: number) => ({
       '@type': 'ListItem',
       position: idx + 1,
-      url: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/deal/${d.slug || d.id}`,
+      url: `${SITE_URL}/deal/${d.slug || d.id}`,
       name: String(d.title || ''),
     })),
   };
@@ -198,11 +203,29 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
         itemListElement: (items || []).slice(0, 12).map((d: any, idx: number) => ({
           '@type': 'ListItem',
           position: idx + 1,
-          url: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/deal/${d.slug || d.id}`,
+          url: `${SITE_URL}/deal/${d.slug || d.id}`,
           name: String(d.title || ''),
         })),
       }
     : undefined;
+  const breadcrumbJson = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: SITE_URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Udemy Coupons',
+        item: `${SITE_URL}/udemy-coupons`,
+      },
+    ],
+  };
 
   const makeParams = (overrides: Record<string, string | undefined> = {}) => {
     const params = new URLSearchParams();
@@ -261,10 +284,12 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
         <h1 style={{ marginBottom: 6 }}>Udemy Coupons & 100% Off Course Deals</h1>
         <div style={{ color: "#00a76f", marginBottom: 8 }}>{total} results</div>
         <p className="muted" style={{ marginTop: 0, marginBottom: 0 }}>
-          Daily updated collection of Udemy coupons featuring 100% off codes, promo discounts, and free Udemy courses. Filter by provider, category, price, and more.
+          Daily updated collection of Udemy coupons featuring 100% off codes, promo discounts, and free Udemy courses. Filter by provider, category, price, and more, or explore the
+          {' '}<a href="/udemy-coupons" style={{ color: "var(--brand)", fontWeight: 600 }}>Udemy coupons hub</a>{' '}for curated promo codes.
         </p>
         <p className="muted" style={{ marginTop: 8, marginBottom: 0, fontSize: 13 }}>
-          Find free Udemy courses, 100% off Udemy coupons, Udemy discount codes, and the latest Udemy deals updated daily. Browse all topics on the <a href="/categories" style={{ color: "var(--brand)", fontWeight: 600 }}>Courseswyn Categories</a> page.
+          Find free Udemy courses, 100% off Udemy coupons, Udemy discount codes, and the latest Udemy deals updated daily. Browse all topics on the <a href="/categories" style={{ color: "var(--brand)", fontWeight: 600 }}>Courseswyn Categories</a> page, or jump straight to
+          {' '}<a href="/?provider=udemy&freeOnly=1" style={{ color: "var(--brand)", fontWeight: 600 }}>100% off Udemy coupons</a>.
         </p>
       </section>
 
@@ -279,6 +304,7 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
           dangerouslySetInnerHTML={{ __html: JSON.stringify(categoryItemListJson) }}
         />
       ) : null}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJson) }} />
 
       {/* SEO keyword chips (Coursera removed) */}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12, marginBottom: 12 }}>
@@ -381,7 +407,20 @@ export default async function Page({ searchParams }: { searchParams: { q?: strin
         <h2 style={{ fontSize: 18, marginBottom: 8 }}>About these Udemy coupons</h2>
         <p className="muted" style={{ marginTop: 0 }}>
           Explore the best Udemy coupons handpicked for learners. Courseswyn regularly refreshes discount codes and free course links so you can enroll in top Udemy classes without breaking the bank.
+          Want everything in one place? Visit our dedicated <a href="/udemy-coupons" style={{ color: "var(--brand)", fontWeight: 600 }}>Udemy coupons landing page</a> for curated deals and FAQs.
         </p>
+      </section>
+
+      <NewsletterSignupCard />
+
+      <section style={{ marginTop: 24 }}>
+        <h2 style={{ fontSize: 18, marginBottom: 12 }}>Popular Udemy coupon topics</h2>
+        <ul style={{ margin: 0, paddingLeft: 18, color: "#b5dce0", fontSize: 14, display: "grid", gap: 8 }}>
+          <li><a href="/?provider=udemy&category=development" style={{ color: "var(--brand)", fontWeight: 600 }}>Udemy web development coupons</a> for programmers seeking new frameworks.</li>
+          <li><a href="/?provider=udemy&category=it-and-software" style={{ color: "var(--brand)", fontWeight: 600 }}>Udemy IT & software coupons</a> to sharpen certification skills.</li>
+          <li><a href="/?provider=udemy&category=design" style={{ color: "var(--brand)", fontWeight: 600 }}>Udemy design coupons</a> covering UI/UX, graphics, and creative suites.</li>
+          <li><a href="/?provider=udemy&freeOnly=1" style={{ color: "var(--brand)", fontWeight: 600 }}>Free Udemy courses</a> updated daily with fresh 100% off codes.</li>
+        </ul>
       </section>
     </div>
   );

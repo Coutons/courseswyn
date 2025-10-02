@@ -7,6 +7,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const routes: MetadataRoute.Sitemap = [
     { url: `${base}/`, lastModified: new Date() },
     { url: `${base}/categories`, lastModified: new Date() },
+    { url: `${base}/udemy-coupons`, lastModified: new Date(), changeFrequency: "daily", priority: 0.8 },
+    { url: `${base}/contact`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.4 },
   ];
 
   try {

@@ -13,6 +13,7 @@ export default function LegacyPostRedirect({ params }: Props) {
   const specials: Record<string, string> = {
     "contact-us": "/contact",
     blog: "/deal/blog",
+    "udemy-coupons-guide": "/post/udemy-coupons-guide",
   };
 
   const target = specials[params.slug] || `/deal/${params.slug}`;
