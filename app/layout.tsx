@@ -36,38 +36,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `,
           }}
         />
-        {/* Impact STAT Tag */}
-        <Script
-          id="impact-stat-tag"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(a,b,c,d,e,f,g){
-                e['ire_o'] = c;
-                e[c] = e[c] || function(){
-                  (e[c].a = e[c].a||[]).push(arguments)
-                };
-                f = d.createElement(b);
-                g = d.getElementsByTagName(b)[0];
-                f.async = 1;
-                f.src = a;
-                g.parentNode.insertBefore(f,g);
-              })('//d.impactradius-event.com/A6564357-35a5-419d-9b2e-28c3c7b15ac311.js','script','impactStat',document,window);
-              
-              if (typeof impactStat === 'function') {
-                try {
-                  impactStat('transformLinks');
-                  impactStat('trackImpression');
-                  console.log('Impact STAT tag initialized successfully');
-                } catch (e) {
-                  console.error('Error initializing Impact STAT tag:', e);
-                }
-              } else {
-                console.error('impactStat function not found');
-              }
-            `,
-          }}
-        />
         {/* Organization & WebSite JSON-LD for SEO */}
         <script
           type="application/ld+json"
@@ -212,7 +180,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </div>
               </div>
             </div>
-            <div style={{ fontSize: 12, color: "#7f93a9" }}>© {new Date().getFullYear()} Courseswyn. All rights reserved.</div>
+            <div className="site-footer-bottom">
+              <span>© {new Date().getFullYear()} Courseswyn. All rights reserved.</span>
+              <div className="footer-inline-links">
+                <a href="/privacy" className="footer-link">Privacy Policy</a>
+                <a href="/terms" className="footer-link">Terms of Use</a>
+              </div>
+            </div>
           </div>
         </footer>
       </body>
