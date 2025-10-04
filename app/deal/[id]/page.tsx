@@ -266,7 +266,7 @@ export default async function DealDetail({ params }: { params: { id: string } })
               <h3>Course content</h3>
               <div style={{ display: "grid", gap: 8 }}>
                 {d.curriculum.map((sec, i) => (
-                  <details key={i} style={{ background: "#121621", border: "1px solid #1f2330", borderRadius: 8, padding: 12 }}>
+                  <details key={i} style={{ background: "var(--card)", border: "1px solid #1f2330", borderRadius: 8, padding: 12 }}>
                     <summary style={{ cursor: "pointer", fontWeight: 600 }}>{sec.section}</summary>
                     <ul style={{ marginTop: 8, display: "grid", gap: 6, paddingLeft: 18 }}>
                       {sec.lectures.map((lec, j) => (
@@ -316,7 +316,7 @@ export default async function DealDetail({ params }: { params: { id: string } })
               <h3>FAQs</h3>
               <div style={{ display: "grid", gap: 8 }}>
                 {d.faqs.map((f, idx) => (
-                  <details key={idx} style={{ background: "#121621", border: "1px solid #1f2330", borderRadius: 8, padding: 12 }}>
+                  <details key={idx} style={{ background: "var(--card)", border: "1px solid #1f2330", borderRadius: 8, padding: 12 }}>
                     <summary style={{ cursor: "pointer", fontWeight: 600 }}>{f.q}</summary>
                     <div style={{ color: "#a9b0c0", marginTop: 8 }}>{f.a}</div>
                   </details>
