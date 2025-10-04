@@ -135,36 +135,20 @@ export default function EditDealPage() {
     setSaving(true);
     setError(null);
     try {
+      const payload: Partial<Deal> = { ...deal };
+      delete payload.id;
+      delete payload.createdAt;
+      delete payload.updatedAt;
+
       const res = await fetch(`/api/admin/deals/${deal.id}`, {
         method: "PATCH",
         headers,
-        body: JSON.stringify(deal),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error(`Save failed (${res.status})`);
       router.push("/admin/deals");
     } catch (e: any) {
       setError(e?.message || "Save failed");
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  async function updateNow() {
-    if (!deal) return;
-    setSaving(true);
-    setError(null);
-    try {
-      // Trigger PATCH without changing fields; server will set updatedAt
-      const res = await fetch(`/api/admin/deals/${deal.id}`, {
-        method: "PATCH",
-        headers,
-        body: JSON.stringify({}),
-      });
-      if (!res.ok) throw new Error(`Update failed (${res.status})`);
-      const next = await res.json();
-      setDeal(next);
-    } catch (e: any) {
-      setError(e?.message || "Update failed");
     } finally {
       setSaving(false);
     }
@@ -377,7 +361,6 @@ export default function EditDealPage() {
         <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
           <button className="pill" onClick={() => router.push("/admin/deals")}>Cancel</button>
           <button className="pill" onClick={save} disabled={saving}>{saving ? "Saving..." : "Save"}</button>
-          <button className="pill" onClick={updateNow} disabled={saving}>Update to now</button>
           {deal.updatedAt && (
             <span className="muted">Last updated {timeAgo(deal.updatedAt)}</span>
           )}

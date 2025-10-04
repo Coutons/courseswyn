@@ -35,15 +35,54 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 
   try {
-    const updated = await updateDeal(params.id, {
-      ...body,
-      coupon: body.coupon !== undefined ? (String(body.coupon).trim() || null) : undefined,
-      price: body.price != null ? Number(body.price) : undefined,
-      originalPrice: body.originalPrice != null ? Number(body.originalPrice) : undefined,
-      rating: body.rating != null ? Number(body.rating) : undefined,
-      students: body.students != null ? Number(body.students) : undefined,
-      updatedAt: new Date().toISOString(),
-    });
+    const patch: Partial<Deal> = {};
+
+    const keys = Object.keys(body ?? {}) as (keyof Deal)[];
+    for (const key of keys) {
+      const value = body[key];
+      switch (key) {
+        case "coupon": {
+          if (value === null) {
+            patch.coupon = null;
+          } else {
+            const trimmed = String(value ?? "").trim();
+            patch.coupon = trimmed.length ? trimmed : null;
+          }
+          break;
+        }
+        case "price": {
+          patch.price = value != null ? Number(value) : undefined;
+          break;
+        }
+        case "originalPrice": {
+          patch.originalPrice = value != null ? Number(value) : undefined;
+          break;
+        }
+        case "rating": {
+          patch.rating = value != null ? Number(value) : undefined;
+          break;
+        }
+        case "students": {
+          patch.students = value != null ? Number(value) : undefined;
+          break;
+        }
+        case "id":
+        case "createdAt":
+        case "updatedAt": {
+          break;
+        }
+        default: {
+          if (value !== undefined) {
+            (patch as Record<string, unknown>)[key as string] = value as unknown;
+          }
+          break;
+        }
+      }
+    }
+
+    patch.updatedAt = new Date().toISOString();
+
+    const updated = await updateDeal(params.id, patch);
     return NextResponse.json(updated);
   } catch (error: any) {
     if (error?.message === "Not found") {
