@@ -376,7 +376,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     const fallbackDescription = [d.provider, d.category, priceLabel]
       .filter((part): part is string => Boolean(part))
       .join(" • ");
-    const description = (d.description ?? "").trim() || fallbackDescription;
+    const baseDescription = (d.description ?? "").trim() || fallbackDescription;
+    const categoryLabel = (d.category ?? "Udemy").trim() || "Udemy";
+    const description = `${baseDescription}${baseDescription ? " " : ""}This is applicable to ${categoryLabel} Udemy discount offers.`;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
     const ogPrimary = d.image ? String(d.image) : `${siteUrl}/api/og/${d.id}`;
     const ogFallback = `${siteUrl}/api/og/${d.id}`;
