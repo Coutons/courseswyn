@@ -387,16 +387,32 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
     const socialImages = [ogPrimary, ogFallback].filter(Boolean) as string[];
 
+    const hasValidPrices =
+      typeof d.originalPrice === "number" &&
+      typeof d.price === "number" &&
+      isFinite(d.originalPrice) &&
+      isFinite(d.price) &&
+      d.originalPrice > 0 &&
+      d.originalPrice > d.price;
+    let discountPct: number | null = null;
+    if (hasValidPrices) {
+      const original = d.originalPrice as number;
+      const price = d.price as number;
+      discountPct = Math.round(((original - price) / original) * 100);
+    }
+    const titleSuffix = discountPct !== null && discountPct > 0 ? `${discountPct}% Off Udemy Coupon` : "Udemy Coupon";
+    const pageTitle = `${normalizedTitle} | ${titleSuffix}`;
+
     const ogMeta: Record<string, string> = d.image
       ? { "og:image": ogPrimary }
       : { "og:image": ogPrimary, "og:image:width": "1200", "og:image:height": "630" };
     return {
-      title: `${normalizedTitle} | Courseswyn`,
+      title: pageTitle,
       description,
       alternates: { canonical: `/deal/${d.id}` },
       other: ogMeta,
       openGraph: {
-        title: normalizedTitle,
+        title: pageTitle,
         description,
         url: `/deal/${d.id}`,
         siteName: "Courseswyn",
@@ -405,7 +421,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       },
       twitter: {
         card: "summary_large_image",
-        title: normalizedTitle,
+        title: pageTitle,
         description,
         images: socialImages,
       },
