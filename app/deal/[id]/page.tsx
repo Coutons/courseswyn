@@ -376,7 +376,7 @@ export default async function DealDetail({ params }: { params: { id: string } })
 
           <section style={{ marginTop: 32 }}>
             <h3>Udemy Coupon & Course Review</h3>
-            <p className="muted" style={{ marginBottom: 24 }}>Here's what you can expect from this course with your Udemy discount:</p>
+            <p className="muted" style={{ marginBottom: 24 }}>Here&apos;s what you can expect from this course with your Udemy discount:</p>
             
             <div style={{ display: 'grid', gap: 24 }}>
               {reviewParagraphs.map((paragraph, idx) => (
