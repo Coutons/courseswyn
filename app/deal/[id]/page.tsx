@@ -5,6 +5,7 @@ import { renderMarkdownToHtml } from "@/lib/markdown";
 import ActionsPanel from "@/components/ActionsPanel";
 import RelatedList from "@/components/RelatedList";
 import { buildDealLink } from "@/lib/links";
+import type { ReactNode } from "react";
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://courseswyn.com").replace(/\/$/, "");
 
@@ -100,6 +101,68 @@ export default async function DealDetail({ params }: { params: { id: string } })
   const d = await getDeal(params.id);
   // UI fallback values (keep display consistent even when fields are missing)
   const key = String(d.slug || d.id);
+  const providerLabel = typeof d.provider === "string" ? d.provider.trim() : "";
+  const platformLabel = providerLabel || "Udemy";
+  const rawCategory = typeof d.category === "string" ? d.category.trim() : "";
+  const categoryLabel = rawCategory || platformLabel;
+  const rawSubcategory = typeof d.subcategory === "string" ? d.subcategory.trim() : "";
+  const subcategoryLabel = rawSubcategory || categoryLabel;
+  const instructorName = typeof d.instructor === "string" ? d.instructor.trim() : "";
+  const categoryHref = rawCategory ? `/?category=${encodeURIComponent(rawCategory)}` : null;
+  const subcategoryHref = rawSubcategory ? `/?category=${encodeURIComponent(rawSubcategory)}` : null;
+  
+  const categoryLink: ReactNode = categoryHref ? (
+    <a href={categoryHref} style={{ color: "#6aa2ff", textDecoration: "underline" }}>{categoryLabel}</a>
+  ) : (
+    categoryLabel
+  );
+  
+  const subcategoryLink: ReactNode = subcategoryHref ? (
+    <a href={subcategoryHref} style={{ color: "#6aa2ff", textDecoration: "underline" }}>{subcategoryLabel}</a>
+  ) : (
+    categoryLink
+  );
+  
+  const instructorHighlight: ReactNode = instructorName ? (
+    <>
+      <strong>{instructorName}</strong> leads this Udemy course in {categoryLink}, blending real project wins with step-by-step coaching.
+    </>
+  ) : (
+    <>
+      This Udemy course blends real project wins with step-by-step coaching from instructors who live and breathe {categoryLabel}.
+    </>
+  );
+  
+  const communityParagraph: ReactNode = instructorName ? (
+    <>
+      <strong>{instructorName}</strong> also keeps an eye on the Q&amp;A and steps in quickly when you need clarity. You&apos;ll find fellow learners trading tips, keeping you motivated as you sharpen your {categoryLabel} skill set with trusted Udemy discounts.
+    </>
+  ) : (
+    <>
+      The teaching team also keeps an eye on the Q&amp;A and steps in quickly when you need clarity. You&apos;ll find fellow learners trading tips, keeping you motivated as you sharpen your {categoryLabel} skill set with trusted Udemy discounts.
+    </>
+  );
+  
+  const reviewParagraphs: ReactNode[] = [
+    <>
+      This Udemy coupon unlocks a guided path into <strong>{normalizeTitle(d.title)}</strong>, so you know exactly what outcomes to expect before you even press play.
+    </>,
+    instructorHighlight,
+    <>
+      The modules are sequenced to unpack {subcategoryLabel} step by step, blending theory with scenarios you can reuse at work while keeping the Udemy course reviews tone in mind.
+    </>,
+    <>
+      Video walkthroughs sit alongside quick-reference sheets, checklists, and practice prompts that make it easy to translate the material into real projects, especially when you grab Udemy discounts like this one.
+    </>,
+    <>
+      Because everything lives on <strong>{platformLabel}</strong>, you can move at your own pace, revisit lectures from any device, and pick the payment setup that fits your budget—ideal for stacking extra Udemy coupon savings.
+    </>,
+    communityParagraph,
+    <>
+      Ready to dive into <strong>{normalizeTitle(d.title)}</strong>? This deal keeps the momentum high and hands you the tools to apply {subcategoryLink} with confidence while your Udemy coupon is still active.
+    </>,
+  ];
+
   const displayPrice = typeof d.price === "number" && isFinite(d.price) && d.price > 0 ? d.price : 9.99;
   const displayOriginal = typeof d.originalPrice === "number" && isFinite(d.originalPrice) && d.originalPrice > displayPrice ? d.originalPrice : 119.99;
   const displayRating = typeof d.rating === "number" && isFinite(d.rating) ? d.rating : genRating(key);
@@ -310,6 +373,10 @@ export default async function DealDetail({ params }: { params: { id: string } })
               />
             </section>
           )}
+
+          {reviewParagraphs.map((paragraph, idx) => (
+            <p key={idx} style={{ marginTop: 16, lineHeight: 1.7 }}>{paragraph}</p>
+          ))}
 
           {d.faqs?.length ? (
             <section style={{ marginTop: 24 }}>
