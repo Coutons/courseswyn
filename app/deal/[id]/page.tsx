@@ -374,9 +374,16 @@ export default async function DealDetail({ params }: { params: { id: string } })
             </section>
           )}
 
-          {reviewParagraphs.map((paragraph, idx) => (
-            <p key={idx} style={{ marginTop: 16, lineHeight: 1.7 }}>{paragraph}</p>
-          ))}
+          <section style={{ marginTop: 32 }}>
+            <h3>Udemy Coupon & Course Review</h3>
+            <p className="muted" style={{ marginBottom: 24 }}>Here's what you can expect from this course with your Udemy discount:</p>
+            
+            <div style={{ display: 'grid', gap: 24 }}>
+              {reviewParagraphs.map((paragraph, idx) => (
+                <p key={idx} style={{ margin: 0, lineHeight: 1.7 }}>{paragraph}</p>
+              ))}
+            </div>
+          </section>
 
           {d.faqs?.length ? (
             <section style={{ marginTop: 24 }}>
